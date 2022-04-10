@@ -1,0 +1,152 @@
+%#######################################
+% Original: Oktober.2011; Prof. Dr. Martin Grüttmüller, FIM
+% Last Edit: Dezember.2021; M.Eng. Mario Hoffmann, Fakultät DIT
+% Reimport: April.2022; Prof. Dr. Jean-Alexander Müller, Fakultät Informatik und Medien
+%#######################################
+
+%!TEX TS-program = lualatex
+%!TEX encoding = UTF-8 Unicode
+%!TEX root = MusterAbschlussarbeit.tex
+%!TEX spellcheck = de_DE
+%!BIB program = biber
+
+\documentclass[a4paper,12pt,numbers=noenddot,parskip,toc=flat,toc=listof,toc=bibliography,twoside=false,captions=tableheading]{scrbook}
+
+%##########################################################
+% Dokumentenangaben
+%##########################################################
+%########## INB
+%\newcommand{\abschlussarbeit}{Bachelorarbeit}
+%\newcommand{\studiengang}{Informatik}
+%\newcommand{\studienganggrad}{Bachelor of Science}
+%########## INM
+\newcommand{\abschlussarbeit}{Masterarbeit}
+\newcommand{\studiengang}{Informatik}
+\newcommand{\studienganggrad}{Master of Science}
+%########## EoStudiengang
+\newcommand{\autor}{VORNAME NACHNAME}
+\newcommand{\geburtsort}{GEBURTSORT}
+\newcommand{\geburtstag}{GEBURTSTAG}
+\newcommand{\titel}{TITEL}
+% Falls kein Untertitel, einfach leer lassen
+\newcommand{\subtitel}{UNTERTITEL}
+\newcommand{\fakultät}{Informatik und Medien}
+\newcommand{\erstgutachter}{NAME ERSTGUTACHTER}
+\newcommand{\instituteErstgutachter}{INSTITUT}
+\newcommand{\zweitgutachter}{NAME ZWEITGUTACHTER}
+\newcommand{\instituteZweitgutachter}{INSTITUT}
+\newcommand{\ort}{ORT}
+
+% Im Fall eines Themas seitens eines Praxispartners --> Sperrvermerke sind genehmigungs-
+% pflichtig!
+\newcommand{\betrieb}{BETRIEB}
+
+%##########################################################
+% Einbinden aller Pakete etc.
+%##########################################################
+
+\input{Headerfiles/preamble}
+\input{Verzeichnisse/Abkuerzungen}
+
+%##########################################################
+% Begin des Dokumentes
+%##########################################################
+\begin{document}
+
+\include{Headerfiles/header}
+\include{Headerfiles/titlepage}
+
+%##########################################################
+% Sperrvermerk
+% Ist vorher abzuklären!
+%##########################################################
+\pagenumbering{gobble}
+%\include{Formalien/Sperrvermerk}
+
+%##########################################################
+% Eidesstaatliche Erklärung
+%##########################################################
+\include{Formalien/EidesstaatlicheErklaerung}
+
+%##########################################################
+% Vorwort (optional)
+%##########################################################
+\include{Formalien/Vorwort}
+
+%##########################################################
+% Abstract/Kurzfassung
+%##########################################################
+\include{Formalien/Kurzfassung}
+
+%##########################################################
+% Inhaltsverzeichnis
+%##########################################################
+\tableofcontents
+
+%##########################################################
+% Abbildungsverzeichnis
+%##########################################################
+\listoffigures
+
+%##########################################################
+% Tabellenverzeichnis
+%##########################################################\
+\listoftables
+
+%##########################################################
+% Quelltextverzeichnis
+%##########################################################\
+\lstlistoflistings
+\clearpage
+
+%##########################################################
+% Abkürzungsverzeichnis
+%##########################################################
+\printacronyms[name=Abkürzungsverzeichnis, heading=chapter*]
+\addcontentsline{toc}{chapter}{Abkürzungsverzeichnis}
+
+%##########################################################
+% Erstes Kapitel
+%##########################################################
+\include{Kapitel/ErstesKapitel}
+
+%##########################################################
+% Zweites Kapitel
+%##########################################################
+\include{Kapitel/ZweitesKapitel}
+
+%##########################################################
+% Drittes Kapitel
+%##########################################################
+\include{Kapitel/DrittesKapitel}
+
+%##########################################################
+% Viertes Kapitel
+%##########################################################
+\include{Kapitel/ViertesKapitel}
+
+%##########################################################
+% Fünftes Kapitel
+%##########################################################
+\include{Kapitel/FuenftesKapitel}
+
+%##########################################################
+% Literatur
+%##########################################################
+\include{Verzeichnisse/Literatur}
+
+%##########################################################
+% Anhang - nicht verwendete Anhangsseiten bitte kommentieren
+%##########################################################
+\appendix
+\pagenumbering{Roman}
+\setcounter{page}{1}
+
+\include{Anhang/AnhangAbbildungen}
+\include{Anhang/AnhangTabellen}
+\include{Anhang/AnhangQuelltexte}
+
+% ***********************************************
+\end{document}
+% ***********************************************
+

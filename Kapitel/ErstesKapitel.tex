@@ -1,0 +1,100 @@
+%!TeX root = ./../MusterAbschlussarbeit.tex
+
+%##########################################################
+% Inhalt
+%##########################################################
+\pagenumbering{arabic}
+\chapter{Einleitung}
+
+Der Leser Ihrer Arbeit sollte die Einleitung (auch als \enquote{Hintergrund} oder \enquote{Problemstellung} bezeichnet) als eine Art Rundblick erleben, 
+der die Landschaft darstellt, mit der der Autor konfrontiert wurde, als die Arbeit entstand. Wann und wie hat sich dieses Forschungsthema erstmals angeboten? 
+Was hat deutlich gemacht, dass es interessante Fragen gibt, die beantwortet werden müssen? Welche Handlungen und Zusammenhänge waren damals schon erkennbar, und welche Schlüsselinformationen fehlten? 
+
+In der Regel wird in der Einleitung auch ein methodischer Ansatz zur Lösung des Problems vorgeschlagen, 
+der möglicherweise durch konkrete Beispiele für die Anwendung dieses Ansatzes unter anderen Umständen veranschaulicht wird. 
+Achten Sie beim Schreiben darauf, dass Sie klar zwischen Ihrer Arbeit und anderen Beiträgen unterscheiden müssen.
+
+Bei umfangreichem Material, das Sie hier behandeln möchten, könnte es sich lohnen, die Einleitung in Unterabschnitte zu unterteilen.
+
+Kein anderer Abschnitt in der Arbeit hängt so sehr von der Literaturrecherche ab wie die Einleitung \cite{aoscw2004}. 
+Bevor Sie mit der Arbeit an Ihrem Projekt begonnen haben, haben Sie sicher einige wichtige Hintergrundartikel gelesen, 
+die Ihnen Ihr Betreuer schon empfohlen hat, aber Sie haben sie wahrscheinlich in letzter Zeit nicht mehr gelesen. 
+Jetzt müssen Sie diese nicht nur erneut lesen, sondern sich auch eingehend mit den darin enthaltenen Verweisen befassen, 
+um sich mit allen wichtigen Informationsquellen vertraut zu machen. Dies wird Sie natürlich auch in die Lage versetzen, 
+frühere Arbeiten kritisch zu bewerten.
+
+\newpage
+
+\section{Ein Beispielabschnitt mit diversen Dingen und Erläuterungen}
+Zunächst ein Beispiel für Tabellen. Wichtig ist, dass die Tabellenbeschriftung a) da ist und b) \underline{über} der Tabelle steht. Die Lesenden wollen wissen was sie sehen, bevor sie in die Tabelle eintauchen.
+Die hier gezeigte Tabelle ist ohne zusätzliche Pakete verwendbar. Alternativ wäre \texttt{longtable} einzubinden und zu verwenden.
+
+\begin{table}[!h]
+    \caption[Tabellenbeschriftung]{Tabellenbeschriftung \cite{Tane2014}}
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        ID & Kapitel & Seiten \\\hline
+        0 & 1 & 5 \\\hline
+    \end{tabular}
+    \label{tab:Beispieltabelle}
+\end{table}
+
+Darüber hinaus drei Beispiele für Programm-Code. Im Ordner \glqq Programmcode\grqq{} sind drei Beispiele für C-, Python- und \ac{html}-Code, welche nachfolgend eingebunden ist.
+Es empfiehlt sich ganze Dateien einzubinden, statt den Quellcode hier abzutippen.\\
+Der Style ist fest definiert und muss nicht abgeändert werden. In aller Regel werden alle stilistischen Anliegen erfüllt.\\
+Wie Sie im \LaTeX{} Quellcode sehen, ist die Caption direkt in den Aufruf reinzuschreiben. Gleiches gilt für ein Label, welches ich hier \ref{lst:C-Code-Beispiel}, hier \ref{lst:Python-Code-Beispiel} und hier \ref{lst:HTML-Code-Beispiel} referenziere.\\
+Die Angabe der Sprache dient dem Zweck, dass sprachspezifische Keywords o.ä. geladen und erkannt werden, damit die Farbgebung passt.
+
+\lstinputlisting[caption=C-Code Beispiel,label={lst:C-Code-Beispiel},language=C]{Programmcode/test.c}
+\lstinputlisting[caption=Python-Code Beispiel,label={lst:Python-Code-Beispiel},language=Python]{Programmcode/test.py}
+
+\textbf{Es ist dabei auch darauf zu achten, dass Quelltexte wenn möglich natürlich nicht über das Seitenende gehen sollten, wie z.B. beim Python-Code Bsp. Setzen Sie daher auch manuell
+Seitenumbrüche.} Quelltexte welche eine Seite übersteigen, sind ohnehin eher als Anhang zu betrachten $\rightarrow$ siehe dazu Beschreibung im Anhang.
+
+\lstinputlisting[caption=HTML-Code Beispiel,label={lst:HTML-Code-Beispiel},language=HTML]{Programmcode/test.html}
+
+Nachfolgend noch ein einfaches Beispiel ein Bild einzubinden. Da es sich um Bild\textit{unterschriften} handelt, gehört diese somit \underline{unter} die Abbildung, anders als bei Tabellen\textit{überschriften}.\\
+Im \LaTeX-Quelltext sieht man die Optionen für das Einbinden des Bildes. Neben \texttt{scale} wäre auch \texttt{width} möglich mit dem Parameter \texttt{linewidth} oder \texttt{textwidth}.\\
+Achten Sie vor allem auf die Lesbarkeit der auf dem Bild befindlichen Informationen, unter der stetigen Annahme, dass es sich um ein ausgedrucktes Dokument handelt. Dort gibt es keinen Zoom.
+
+Empfehlenswert wäre soweit möglich mit skalierbaren Vektorgrafiken zu arbeiten. Allerdings müssten Sie diese vor dem Aufruf von LaTeX in PDFs wandeln (inkscape IM-logo.svg -o IM-logo.pdf) oder Inkscape installieren und LaTeX mit --shell-escape aufrufen.
+
+\begin{figure}[!t]
+    \centering
+    \includegraphics[scale=0.6]{Bilder/logos/IM-logo}
+    \caption{Das Logo von Informatik und Medien }
+\end{figure}
+
+\begin{figure}[!t]
+    \centering
+    \includesvg[width=0.6\columnwidth]{Bilder/logos/IM-logo.svg}
+    \caption{Das Logo von Informatik und Medien }
+\end{figure}
+
+Bedenken Sie bei allen Beschriftungen, egal ob Abbildungen, Tabellen oder Quelltexte, dass Sie, sofern diese nicht Ihrer eigenen Schaffenskraft entsprangen,
+diese referenzieren. Im Beispiel der Tabelle \ref{tab:Beispieltabelle} sieht man, dass sich der Beschreibungstext direkt an der Tabelle von dem im Tabellenverzeichnis unterscheidet,
+genau um den Punkt der Referenz.
+
+\section{Methodik}
+
+Im Methodik-Abschnitt (eine eigene Section) einer Arbeit stellen Sie die Methoden dar, die Sie verwendet haben oder vorhaben zu verwenden, um die Fragestellung zu beantworten. 
+In diesem Abschnitt erläutern Sie, welche Methoden umgesetzt wurden (oder auch angedacht), um die Hypothesen zu testen und die Fallstudie durchzuführen. 
+Welche Methoden für Ihre Arbeit geeignet sind, ist auch ein wesentlicher Punkt Ihres angestrebten Titels und somit ein zu bewertender Teil dieser Arbeit. 
+
+\underline{Aber \textbf{mindestens} folgende Punkte}\\
+Inhalt des ersten Kapitels (im Allgemeinen):
+\begin{itemize}
+    \item Thematische Einführung, umreißen des Themas \dots wo befinden wir uns?
+    \item Herausstellen des Problems und warum es eines ist was gelöst werden sollte.
+    \item Herausstellen der tatsächlichen Ziel-/Fragestellung, welche bearbeitet werden wird.
+    \item Eine Abgrenzung was diese Arbeit ist und was sie nicht ist.
+    \item Stand der Forschung \dots Was existiert bereits? Wie gut passt das auf das Problem?
+    \begin{itemize}
+        \item Referenzen mittels cite: \cite[S.~111]{jsch2011} \cite[S.~27f]{Tane2014}
+    \end{itemize}
+    \item Eine abgeleitete Methodik $\rightarrow$ basierend auf der Literatur und Ihrem Wissen: wie haben Sie nun vor Ihr Problem zu lösen? Vllt durch \cite{9429985}?
+\end{itemize}
+
+
+
