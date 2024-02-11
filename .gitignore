@@ -1,0 +1,12 @@
+# Latex artifacts
+*.aux
+*.lo?
+*.out
+*.toc
+*.bcf
+*.run.xml
+*.pdf
+
+# directories
+svg-inkscape
+build
