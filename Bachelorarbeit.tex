@@ -6,52 +6,37 @@
 
 %!TEX TS-program = lualatex
 %!TEX encoding = UTF-8 Unicode
-%!TEX root = MusterAbschlussarbeit.tex
+%!TEX root = Bachelorarbeit.tex
 %!TEX spellcheck = de_DE
 %!BIB program = biber
 
-\documentclass[a4paper,12pt,numbers=noenddot,parskip,toc=flat,toc=listof,toc=bibliography,twoside=false,captions=tableheading]{scrbook}
+\documentclass[
+    a4paper,
+    12pt,
+    numbers=noenddot,
+    parskip,
+    toc=flat,
+    toc=listof,
+    toc=bibliography,
+    twoside=false,
+    captions=tableheading]{scrbook}
 
-%##########################################################
-% Dokumentenangaben
-%##########################################################
-%########## INB
-\newcommand{\abschlussarbeit}{Bachelorarbeit}
-\newcommand{\studiengang}{Informatik}
-\newcommand{\studienganggrad}{Bachelor of Science}
-%########## EoStudiengang
-\newcommand{\autor}{Jonas Schulze}
-\newcommand{\geburtsort}{Hohenmölsen}
-\newcommand{\geburtstag}{23.04.2001}
-\newcommand{\titel}{Emulation eines 32 bit Mikrocontrollers zur virtualisierten Ausführung
-einer Embedded Software Applikation}
-% Falls kein Untertitel, einfach leer lassen
-\newcommand{\subtitel}{}
-\newcommand{\fakultät}{Informatik und Medien}
-\newcommand{\erstgutachter}{NAME ERSTGUTACHTER}
-\newcommand{\instituteErstgutachter}{INSTITUT}
-\newcommand{\zweitgutachter}{NAME ZWEITGUTACHTER}
-\newcommand{\instituteZweitgutachter}{INSTITUT}
-\newcommand{\ort}{Leipzig}
-
-% Im Fall eines Themas seitens eines Praxispartners --> Sperrvermerke sind genehmigungs-
-% pflichtig!
-\newcommand{\betrieb}{SENEC GmbH}
 
 %##########################################################
 % Einbinden aller Pakete etc.
 %##########################################################
 
-\input{Headerfiles/preamble}
-\input{Verzeichnisse/Abkuerzungen}
+\input{header/CustomConfigs}
+\input{header/Packages}
+\input{verzeichnisse/Abkuerzungen}
 
 %##########################################################
 % Begin des Dokumentes
 %##########################################################
 \begin{document}
 
-\include{Headerfiles/header}
-\include{Headerfiles/titlepage}
+\include{header/Header}
+\include{titelseite/Titelseite}
 
 %##########################################################
 % Sperrvermerk
@@ -63,17 +48,17 @@ einer Embedded Software Applikation}
 %##########################################################
 % Eidesstaatliche Erklärung
 %##########################################################
-\include{Formalien/EidesstaatlicheErklaerung}
+\include{formalien/EidesstaatlicheErklaerung}
 
 %##########################################################
 % Vorwort (optional)
 %##########################################################
-\include{Formalien/Vorwort}
+\include{formalien/Vorwort}
 
 %##########################################################
 % Abstract/Kurzfassung
 %##########################################################
-\include{Formalien/Kurzfassung}
+\include{formalien/Kurzfassung}
 
 %##########################################################
 % Inhaltsverzeichnis
@@ -105,32 +90,32 @@ einer Embedded Software Applikation}
 %##########################################################
 % Erstes Kapitel
 %##########################################################
-\include{Kapitel/ErstesKapitel}
+\include{kapitel/ErstesKapitel}
 
 %##########################################################
 % Zweites Kapitel
 %##########################################################
-\include{Kapitel/ZweitesKapitel}
+\include{kapitel/ZweitesKapitel}
 
 %##########################################################
 % Drittes Kapitel
 %##########################################################
-\include{Kapitel/DrittesKapitel}
+\include{kapitel/DrittesKapitel}
 
 %##########################################################
 % Viertes Kapitel
 %##########################################################
-\include{Kapitel/ViertesKapitel}
+\include{kapitel/ViertesKapitel}
 
 %##########################################################
 % Fünftes Kapitel
 %##########################################################
-\include{Kapitel/FuenftesKapitel}
+\include{kapitel/FuenftesKapitel}
 
 %##########################################################
 % Literatur
 %##########################################################
-\include{Verzeichnisse/Literatur}
+\include{verzeichnisse/Literatur}
 
 %##########################################################
 % Anhang - nicht verwendete Anhangsseiten bitte kommentieren
@@ -139,9 +124,9 @@ einer Embedded Software Applikation}
 \pagenumbering{Roman}
 \setcounter{page}{1}
 
-\include{Anhang/AnhangAbbildungen}
-\include{Anhang/AnhangTabellen}
-\include{Anhang/AnhangQuelltexte}
+\include{anhang/AnhangAbbildungen}
+\include{anhang/AnhangTabellen}
+\include{anhang/AnhangQuelltexte}
 
 % ***********************************************
 \end{document}

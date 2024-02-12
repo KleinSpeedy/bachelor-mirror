@@ -1,4 +1,4 @@
-%!TeX root = ./../MusterAbschlussarbeit.tex
+%!TeX root = ./../Bachelorarbeit.tex
 
 
 %##########################################################
@@ -8,8 +8,6 @@
 \usepackage[T1]{fontenc}
 \usepackage[osf,scale=1.15]{sourcesanspro}
 \usepackage{csquotes}
-\usepackage[backend=biber,sorting=none,bibencoding=utf8]{biblatex}
-\addbibresource{MusterBachelorArbeitBib.bib}
 \usepackage[headsepline]{scrlayer-scrpage}
 \usepackage{fontspec}
 \setcounter{tocdepth}{\subsubsectiontocdepth}
@@ -18,8 +16,13 @@
 %## #### #### ####### ###
 \usepackage[absolute, overlay]{textpos}
 \usepackage{svg}
-%\DeclareGraphicsExtensions{.png,.jpg,.gif,.pdf,.svg}
-%\renewcommand\includesvg[2][]{\includegraphics{#2}}
+
+% Bib Literatur Verweise
+\usepackage[
+	backend=biber,
+	sorting=none,
+	bibencoding=utf8]{biblatex}
+\addbibresource{Literatur.bib}
 
 \AtBeginDocument{%
 	\providecaptionname{ngerman}{\lstlistlistingname}{Quellcodeverzeichnis}
@@ -46,15 +49,15 @@
 %######## Legen Sie die Farbe fest #####
 % htwkBlau, htwkGruen, htwkRot, htwkCyan, htwkGelb, htwkMagenta, htwkGrau
 \newcommand{\farbe}{htwkBlau}
+\newcommand{\urlfarbe}{htwkBlau}
+\newcommand{\citefarbe}{htwkBlau}
 %#########################################
 
-%Linkformatierung
+% Linkformatierung
 \usepackage[
 	    colorlinks=true,
-	    urlcolor=htwkBlau,
-	    citecolor=htwkBlau,
-		pdftitle={\titel},
-		pdfauthor={\autor},
+	    urlcolor={\urlfarbe},
+	    citecolor={\citefarbe},
 		breaklinks=true,
 		hidelinks
 ]{hyperref}
