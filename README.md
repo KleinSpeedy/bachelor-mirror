@@ -1,3 +1,3 @@
-# MusterAbschlussarbeiten
+# Bachelor-thesis
 
-Eine LaTeX-Vorlage für Bachelor und Masterarbeiten
+Bachelorarbeit 2024
