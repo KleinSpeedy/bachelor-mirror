@@ -28,3 +28,6 @@ else
     echo "Could not find output pdf, exiting"
     exit 1
 fi
+
+# Cleanup afterwards on success
+$PWD/skripte/clean.sh
