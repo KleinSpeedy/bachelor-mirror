@@ -13,3 +13,13 @@ Bachelorarbeit 2024
 ```sh
 ./skripte/clean.sh
 ```
+
+**Build docker image**
+```sh
+docker build -t thesis-builder .
+```
+
+**Build using docker**
+```sh
+docker run --rm -it -v $(pwd):/bachelor-thesis thesis-builder ./skripte/2pdf.sh
+```
