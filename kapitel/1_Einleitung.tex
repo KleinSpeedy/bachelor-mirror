@@ -1,0 +1,126 @@
+%!TeX root = ./../Bachelorarbeit.tex
+
+%##########################################################
+% Inhalt
+%##########################################################
+\pagenumbering{arabic}
+\chapter{Einleitung}
+
+Eingebettete Systeme sind heutzutage allgegenwärtig.
+Von einem intelligenten Heizungsthermostat integriert in ein System zur Haussteuerung,
+über den Staubsaugroboter der mittels WiFi-Kommunikation durch die App auf dem
+Smartphone gesteuert werden kann, hin zu Satelliten und selbstfahrenden Autos.
+All dies benötigt Eingebettete Systeme und deren Software Applikationen.
+
+\section{Problemstellung}
+
+Bei der Entwicklung von Software für eingebettete Systeme gibt es mehrere Einflussfaktoren,
+die den Prozess deutlich erschweren.
+Im Vergleich zur \textit{Web-} oder \textit{Desktop} Anwendungs-Programmierung
+sind die genutzten Platformen häufig sehr spezifisch.
+Elektronische Baugruppen werden oft individuell zusammengestellt und auf ihre
+unterschiedlichen Anwendungsbereiche angepasst.
+Diese Vielfalt wird begleitet durch eine große Anzahl unterschiedlicher Mikroprozessor
+Platformen und Architekturen.
+Darüber hinaus gibt es selbst für einzelne Architekturen wie \textit{ARM}
+oder \textit{RISC-V} von Hersteller zu Hersteller
+verschiedene Mikrocontroller-Variationen.
+Diese Variationen unterscheiden sich zum Bespiel bei der Menge an Ressourcen, wie
+Flash- und \ac{ram} Speicher und der Ausstattung mit verschiedenen Peripherie Baugruppen,
+wie Ethernet oder \ac{can}.
+Software für Eingebettete Systeme muss also individuell auf unterschiedliche Platformen
+angepasst werden und ist meist ebenso unterschiedlich wie die Plattformen auf denen
+sie betrieben wird.
+
+Darüber hinaus eignen sich Mikrocontroller nicht zur Entwicklung von Software.
+Ressourcen und Rechenleistung sind deutlich geringer als beispielsweise auf einem
+Heim-Computer.
+Viele Anwendungen sind darauf ausgelegt möglichst energiesparend zu sein, da meist
+keine dauerhafte Stromquelle zur Verfügung steht.
+CPU Architektur der Ziel- und Entwicklungsplattform sind daher oft unterschiedlich,
+was zur Nutzung plattformunabhängiger \textit{Toolchains} zur \textit{Cross-Kompilierung}
+führt.
+Software für eingebettete Systeme kann also nicht einfach auf der
+Entwicklungsplattform ausgeführt werden, da die Plattformen meist auf
+Instruktionsebene inkompatibel sind.
+
+Fehler die nur bei der spezifischen Architektur auftreten können, sind durch
+diese Inkompatibilität schwerer zu identifizieren.
+Zur Vorbeugung dieser Probleme gibt es zwar Werkzeuge wie statische Code-Analyse,
+diese können aber nicht alle Fehler finden oder beheben. 
+Um die vollständige Korrektheit der Implementation zu testen, muss die Anwendung
+also auf der Zielplattform ausgeführt werden. \newline
+Zur Fehlersuche während der Ausführung des Programms wird meist extra Hardware benötigt,
+welche auf integrierte Schnittstellen, wie zum Beispiel \ac{jtag}, zugreift,
+um das Programm anzuhalten und den Zustand an spezifischen Zeitpunkten zu inspizieren.
+Sind diese Schnittstellen oder die extra Hardware nicht vorhanden wird die Fehlersuche
+deutlich aufwendiger und schwieriger, bei manchen Anwendungen sogar unmöglich.
+Hinzukommt die Zugänglichkeit des Systems.
+Die elektronischen Baugruppen und Mikrocontroller könnten sich in einem
+versiegelten Gehäuse befinden oder sind möglicherweise gar nicht zugänglich,
+beispielsweise bei Satelliten.
+
+\section{Zielstellung}
+
+Eine Möglichkeit den vielfältigen Problemen bei der Entwicklung von Software
+für eingebettete Systeme zu begegnen, ist die Emulation der Zielplattform in Verbindung
+mit der Simulation der verwendeten Peripherie.
+Man umgeht damit das Problem der Inkompatibilität von Ziel- und Entwicklungsplattform.\newline
+(Verweis Web-Engineering Vorlesung - Docker etc -> ähnliches Prinzip).
+
+Ziel dieser Abschlussarbeit ist es, eine 32-Bit Mikrocontroller Plattform mitsamt
+ihrer Peripherie zu emulieren, um die dafür entwickelte Software Applikation
+virtualisiert auf der Entwicklungsplattform ausführen zu können.
+
+Als ersten Schritt soll dafür ein geegneites Werkzeug zur Emulation der \ac{cpu}
+ausgesucht werden.
+Dieses Werkzeug sollte die folgenden Eigenschaften
+\begin{itemize}
+    \item Vollständigkeit der Zielplattform,
+    \item Einfachheit der Nutzung im Kontext der Entwicklung,
+    \item Performanz der ausgeführten Applikation und Anwendung und
+    \item Erweiterbarkeit der Implementation
+\end{itemize}
+möglichst vollständig aufweisen.
+
+Aufgrund der, in der Problemstellung genannten, Vielfältigkeit von Mikrocontrollern
+soll im Falle einer unvollständigen Emulation eine Möglichkeit entwickelt werden,
+wie möglichst viele Peripherie-Baugruppen einfach mittels Software simuliert werden
+können.
+Nach Vorhergehender Bewertung der Peripherie nach
+\begin{itemize}
+    \item Wichtigkeit im Kontext der Anwendung,
+    \item Komplexität der Integrierung,
+    \item Heterogenität,
+    \item Vorhandensein
+\end{itemize}
+soll eine Baugruppe exemplarisch implementiert werden.
+
+Anschließend soll die Vollständigkeit der Lösung mithilfe mehrerer exemplarischer
+Beispiel Anwendungen getestet und bewertet werden.
+(-> welche Anwendungen ? -> welche Kriterien ?)
+
+\newpage
+
+\section{Methodik}
+
+Im Methodik-Abschnitt (eine eigene Section) einer Arbeit stellen Sie die Methoden dar,
+die Sie verwendet haben oder vorhaben zu verwenden, um die Fragestellung zu beantworten. 
+In diesem Abschnitt erläutern Sie, welche Methoden umgesetzt wurden (oder auch angedacht),
+um die Hypothesen zu testen und die Fallstudie durchzuführen. 
+Welche Methoden für Ihre Arbeit geeignet sind, ist auch ein wesentlicher Punkt Ihres
+angestrebten Titels und somit ein zu bewertender Teil dieser Arbeit. 
+
+\underline{Aber \textbf{mindestens} folgende Punkte}\\
+Inhalt des ersten Kapitels (im Allgemeinen):
+\begin{itemize}
+    \item Thematische Einführung, umreißen des Themas \dots wo befinden wir uns?
+    \item Herausstellen des Problems und warum es eines ist was gelöst werden sollte.
+    \item Herausstellen der tatsächlichen Ziel-/Fragestellung, welche bearbeitet werden wird.
+    \item Eine Abgrenzung was diese Arbeit ist und was sie nicht ist.
+    \item Stand der Forschung \dots Was existiert bereits? Wie gut passt das auf das Problem?
+    \begin{itemize}
+        \item Referenzen mittels cite: \cite[S.~111]{jsch2011} \cite[S.~27f]{Tane2014}
+    \end{itemize}
+    \item Eine abgeleitete Methodik $\rightarrow$ basierend auf der Literatur und Ihrem Wissen: wie haben Sie nun vor Ihr Problem zu lösen? Vllt durch \cite{9429985}?
+\end{itemize}

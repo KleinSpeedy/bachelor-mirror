@@ -1,0 +1,133 @@
+%#######################################
+% Original: Oktober.2011; Prof. Dr. Martin Grüttmüller, FIM
+% Last Edit: Dezember.2021; M.Eng. Mario Hoffmann, Fakultät DIT
+% Reimport: April.2022; Prof. Dr. Jean-Alexander Müller, Fakultät Informatik und Medien
+%#######################################
+
+%!TEX TS-program = lualatex
+%!TEX encoding = UTF-8 Unicode
+%!TEX root = Bachelorarbeit.tex
+%!TEX spellcheck = de_DE
+%!BIB program = biber
+
+\documentclass[
+    a4paper,
+    12pt,
+    numbers=noenddot,
+    parskip,
+    toc=flat,
+    toc=listof,
+    toc=bibliography,
+    twoside=false,
+    captions=tableheading]{scrbook}
+
+
+%##########################################################
+% Einbinden aller Pakete etc.
+%##########################################################
+
+\input{header/CustomConfigs}
+\input{header/Packages}
+\input{verzeichnisse/Abkuerzungen}
+
+%##########################################################
+% Begin des Dokumentes
+%##########################################################
+\begin{document}
+
+\include{header/Header}
+\include{titelseite/Titelseite}
+
+%##########################################################
+% Sperrvermerk
+% Ist vorher abzuklären!
+%##########################################################
+\pagenumbering{gobble}
+%\include{Formalien/Sperrvermerk}
+
+%##########################################################
+% Eidesstaatliche Erklärung
+%##########################################################
+\include{formalien/EidesstaatlicheErklaerung}
+
+%##########################################################
+% Vorwort (optional)
+%##########################################################
+\include{formalien/Vorwort}
+
+%##########################################################
+% Abstract/Kurzfassung
+%##########################################################
+\include{formalien/Kurzfassung}
+
+%##########################################################
+% Inhaltsverzeichnis
+%##########################################################
+\tableofcontents
+
+%##########################################################
+% Abbildungsverzeichnis
+%##########################################################
+\listoffigures
+
+%##########################################################
+% Tabellenverzeichnis
+%##########################################################\
+\listoftables
+
+%##########################################################
+% Quelltextverzeichnis
+%##########################################################\
+\lstlistoflistings
+\clearpage
+
+%##########################################################
+% Abkürzungsverzeichnis
+%##########################################################
+\printacronyms[name=Abkürzungsverzeichnis, heading=chapter*]
+\addcontentsline{toc}{chapter}{Abkürzungsverzeichnis}
+
+%##########################################################
+% Erstes Kapitel
+%##########################################################
+\include{kapitel/1_Einleitung}
+
+%##########################################################
+% Zweites Kapitel
+%##########################################################
+\include{kapitel/ZweitesKapitel}
+
+%##########################################################
+% Drittes Kapitel
+%##########################################################
+\include{kapitel/DrittesKapitel}
+
+%##########################################################
+% Viertes Kapitel
+%##########################################################
+\include{kapitel/ViertesKapitel}
+
+%##########################################################
+% Fünftes Kapitel
+%##########################################################
+\include{kapitel/FuenftesKapitel}
+
+%##########################################################
+% Literatur
+%##########################################################
+\include{verzeichnisse/Literatur}
+
+%##########################################################
+% Anhang - nicht verwendete Anhangsseiten bitte kommentieren
+%##########################################################
+\appendix
+\pagenumbering{Roman}
+\setcounter{page}{1}
+
+\include{anhang/AnhangAbbildungen}
+\include{anhang/AnhangTabellen}
+\include{anhang/AnhangQuelltexte}
+
+% ***********************************************
+\end{document}
+% ***********************************************
