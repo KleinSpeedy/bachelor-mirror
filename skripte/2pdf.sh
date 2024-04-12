@@ -16,9 +16,6 @@ do
     fi
 done
 
-TOC=$(date +"%Y_%m_%d")
-NAME=Jonas_Schulze_Bachelorarbeit_$TOC
-
 help()
 {
     echo "Usage of $(basename $0) [-h] [-n]"
@@ -29,7 +26,6 @@ help()
 
 build_pdf()
 {
-    echo "Start creation of $NAME at `pwd`"
     lualatex --shell-escape Bachelorarbeit.tex
     if [ -f $PWD/Bachelorarbeit.bcf ]; then
         biber $PWD/Bachelorarbeit.bcf
@@ -42,6 +38,8 @@ build_pdf()
 
 rename_pdf()
 {
+    TOC=$(date +"%Y_%m_%d")
+    NAME=Jonas_Schulze_Bachelorarbeit_$TOC
     # Rename pdf
     if [ -f Bachelorarbeit.pdf ]; then
         mv Bachelorarbeit.pdf $NAME.pdf
