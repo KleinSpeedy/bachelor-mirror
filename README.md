@@ -1,4 +1,4 @@
-# 2024 J.Schulze - Emulation eines 32bit Mikrocontrollers
+# Bachelor-thesis
 
 Bachelorarbeit 2024
 
