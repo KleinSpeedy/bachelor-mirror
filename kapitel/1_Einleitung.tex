@@ -14,19 +14,19 @@ die App auf dem Smartphone gesteuert werden kann, hin zu Satelliten und
 selbstfahrenden Autos.
 All dies benötigt eingebettete Systeme und deren Software Applikationen.
 Die Entwicklung dieser wird allerdings von verschiedenen Herausforderungen
-begleitet, welche beispielsweise bei der Entwicklung von \textit{Web-} oder
-\textit{Desktop} Anwendungen nicht auftreten. \newline
-Die große Vielfalt von Anwendungsbereichen führt zu vielen verschiedenen,
-individuell zusammengestellten elektronischen Baugruppen, welche wiederum auf
-einer großen Auswahl verschiedener Mikroprozessor Plattformen und Architekturen
-basieren. \newline
+begleitet, welche im Gegensatz zur Entwicklung von \textit{Web-} oder
+\textit{Desktop} Anwendungen nicht auftreten.\newline
+Die große Vielfalt an Anwendungsbereichen führt zu vielen verschiedenen,
+individuell zusammengestellten elektronischen Baugruppen, welche auf einer
+großen Auswahl verschiedener Mikroprozessor Plattformen und Architekturen
+basieren.\newline
 % TODO: system-on-chip (SoC) mit integrieren
 Darüber hinaus gibt es selbst für einzelne Architekturen wie beispielsweise
 \textit{ARM} oder \textit{RISC-V} von Hersteller zu Hersteller verschiedene
 Mikrocontroller Varianten.
-Diese unterscheiden sich zum Bespiel bei der Menge an Ressourcen, wie
-Flash- und \ac{ram} Speicher und der Ausstattung mit verschiedenen Peripherie
-Baugruppen, wie Ethernet oder \ac{can}. \newline
+Diese unterscheiden sich zum Bespiel in der Menge an Ressourcen, wie Flash-
+und \acs{ram} Speicher und der Ausstattung mit verschiedenen
+Peripherie Baugruppen, wie Ethernet oder \acs{can}.\newline
 Software für eingebettete Systeme muss also individuell auf unterschiedliche
 Zielplattformen angepasst werden.
 % TODO: STM32 Modell auf MCU hier bereits einbringen oder erst in
@@ -37,10 +37,10 @@ Zielplattformen angepasst werden.
 % TODO: 32 vs 64 bit Speicheraddressierung einbringen?
 Mikrocontroller eignen sich nicht zur Entwicklung von Software.
 Sie besitzen deutlich weniger Speicher und Rechenleistung als beispielsweise
-herkömmliche Workstations oder Laptops.
+Workstations oder Laptops.
 Auch die Anbindung nötiger Peripheriegeräte zur Bedienung wie Maus, Tastatur
-oder Bildschirm sind nicht ohne weiteres möglich.
-Darüber hinaus sind die CPU Architektur der Ziel- und Entwicklungsplattform in
+oder Bildschirm ist nicht ohne weiteres möglich.
+Darüber hinaus ist die CPU Architektur der Ziel- und Entwicklungsplattform in
 der Regel unterschiedlich, was eine Inkompatibilität von Ziel- und
 Entwicklungsplattform auf Maschinenbefehl-Ebene zur Folge hat.\newline
 Aufgrund dieser Punkte können Anwendungen für eingebettete Systeme nicht
@@ -49,45 +49,43 @@ Um die Firmware zu erstellen ist die Nutzung plattformunabhängiger
 \textit{Toolchains} zur \textit{Cross-Kompilierung} nötig.
 Dies verlangsamt den Entwicklungsprozess, da Firmware, zum Beispiel für Tests,
 immer erst auf den Mikrocontroller \textit{geflasht} werden muss.
-Das \textit{Flashen} geschieht im Entwicklungsprozess meist unter Zuhilfenahme
-von extra Hardware, um die Fimrware-Datei auf den Mikrocontroller zu
-schreiben.\newline
-Auch der direkte Zugriff auf das System ist heutzutage nicht immer
-gewährleistet.
+Das Flashen geschieht im Entwicklungsprozess meist unter Zuhilfenahme
+von extra Hardware, welche genutzt wird um die Firmware auf den Mikrocontroller
+zu schreiben.\newline
+Auch der direkte Zugriff auf das System ist nicht immer gewährleistet.
 Zahlen des statistischen Bundesamtes zeigen, dass im IT-Dienstleistungsbereich
 im Jahr 2021 gut drei Viertel der Beschäftigten im Home-Office
 arbeiteten\cite{DestatisHomeOffice}.
-Auch der Mangel an Mikrocontrollern und anderen elektronischen Bauteilen sind
-problematisch, weil nicht jedem Entwickler ein Testgerät zur Verfügung gestellt
-werden kann.\newline
-Ein weiteres Problem ist, dass Compiler, welche den Maschinencode für die
-jeweilige Architektur generieren, spezifische Fehler aufweisen können, welche
-bei Compilern für die Entwicklungsplattform möglicherweise nicht
+Der Mangel an Mikrocontrollern und anderen elektronischen Bauteilen kann
+ebenfalls problematisch sein, weil nicht für jeden Entwickler ein Testgerät
+bereitgestellt werden kann.\newline
+Ein weiteres Problem besteht darin, dass Compiler spezifische Fehler aufweisen
+können, welche bei Compilern für die Entwicklungsplattform möglicherweise nicht
 auftreten\cite{DebGccBug}\cite{LaunchpadGccBug} oder in neueren Versionen schon
 behoben wurden.
 Diese Fehler zu identifizieren ist schwierig und sie nachzustellen zudem
 sehr zeitaufwendig.\newline
 Zur Fehlersuche während der Ausführung des Programms wird meist extra Hardware
-benötigt, welche auf integrierte Schnittstellen, wie zum Beispiel \ac{jtag},
-zugreift, um das Programm anzuhalten und dessen Zustand an spezifischen
-Zeitpunkten zu inspizieren.
+benötigt, welche auf integrierte Schnittstellen, wie zum Beispiel
+\acs{jtag}, zugreift.
+Das laufende Programm kann anschließend pausiert werden, um den Zustand an
+spezifischen Zeitpunkten zu inspizieren.
 Sind diese Schnittstellen oder die extra Hardware nicht vorhanden wird die
 Fehlersuche deutlich aufwendiger und schwieriger, bei manchen Anwendungen sogar
 unmöglich.
 Zur Vorbeugung dieser Probleme gibt es zwar Werkzeuge wie statische
 Code-Analyse, diese können aber nicht alle Fehler finden oder beheben. 
-Um die vollständige Korrektheit der Implementation zu überprüfen,
-\textit{muss} die Anwendung also zum Test unter Bedingungen, welche denen auf
-der Zielplattform sehr nahe kommen, ausgeführt werden.\newline
-Eine Möglichkeit möglichst reale Bedingungen bei der Ausführung abzubilden,
-ohne dabei durch die eingehends beschriebenen Probleme zu sehr eingeschränkt zu
-sein, ist die Emulation des Mikrocontrollers in Verbindung mit der Simulation
-der verbauten Peripherie.
-Dies ermöglicht die lokale Ausführung und Inspizierung der Software auf der
-Entwicklungsplattform, was die Nötigkeit für extra Hardware zum
-\textit{flashen} und \textit{debuggen} der Software eliminiert.
-Das verbessert die Entwicklungsgeschwindigkeit und macht Entwickler Hardware-
-und ortsunabhängig.
+Um die Korrektheit der Implementation zu überprüfen, \textit{muss} die
+Anwendung also zum Test unter Bedingungen, welche denen auf der Zielplattform
+sehr nahe kommen ausgeführt werden.\newline
+Eine Möglichkeit reale Bedingungen bei der Ausführung abzubilden, ist die
+Emulation des Mikrocontrollers und der integrierten Peripheriebaugruppen.
+Dies ermöglicht die lokale Ausführung und Inspektion der Anwendung auf der
+Entwicklungsplattform während der Laufzeit.
+Die Notwendigkeit für extra Hardware zum flashen und \textit{debuggen} der
+Software wird reduziert.
+Das erhöht die Entwicklungsgeschwindigkeit und macht Entwickler Hardware- und
+ortsunabhängiger.
 % TODO: Verweis Web-Engineering Vorlesung - Docker etc -> ähnliches Prinzip
 
 \section{Zielstellung}
@@ -95,53 +93,49 @@ und ortsunabhängig.
 Im Rahmen dieser Arbeit soll eine Herangehensweise vorgestellt werden, mithilfe
 derer man Software für einen 32-Bit Mikrocontroller unabhängig von der
 tatsächlichen Hardware entwickeln kann.
-Dabei soll für die Emulation der \ac{cpu} das Programm \textit{QEMU} genutzt
-werden.
-QEMU ermöglicht die Emulation verschiedener CPU Architekturen und
-Mikrocontroller Familien.\newline
-% TODO: Verwendeter Controller nicht in QEMU abgebildet -> Wie in Talk
-Für diese Arbeit soll das Mikrocontroller Modell \textbf{STM32F429} der
-\textbf{STM32F4} Familie emuliert werden.
-Zum Zeitpunkt dieser Arbeit exisiert in QEMU keine Implementation für dieses
-Modell.
+Zur Emulation von \acs{cpu} und \acs{soc} soll
+das Programm \textit{QEMU} genutzt werden.\newline
+Für diese Arbeit wurde das Mikrocontroller Modell \textbf{STM32F429} der
+\textbf{STM32F4} Familie als Zielplattform ausgewählt.
+Zum Zeitpunkt dieser Arbeit ist die Emulation der CPU möglich, es besteht aber
+keine Implementation für den SoC in QEMU.
 Es existieren allerdings Integrationen für Modelle verwandter Produktfamilien,
 so zum Beispiel für die Mikrocontroller \textbf{STM32F405} oder
 \textbf{STM32F205}\cite{QemuSTMDoku}.
 Die Modelle der Produktfamilien \textbf{F4} und \textbf{F2} unterscheiden sich
-geringfügig in Konfiguration und Speichergrößen.
-Mithilfe geringfügiger Anpassungen können sie also zumindest als Basis zur
-Emulation der Befehlssatzarchitektur des gewählten Modells dienen.
-Dennoch muss die Zielplattform in QEMU möglichst vollständig emuliert werden
-können, um als reelle Testplattform für die Entwicklung zu dienen.
-Wenngleich die Befehlssatzarchitektur emuliert werden kann, so ist die
-Unterstützung für die verwendete Peripherie gering.\newline
-Im zweiten Schritt soll daher für fehlende Peripherie eine prototypische
-Implementierung entwickelt werden.
+nur geringfügig in Konfiguration und Speichergrößen und können daher als Basis
+zur Emulation des gewählten Modells dienen.
+Die Anzahl unterstützter Peripherie ist auch für die bereits integrierten
+Modelle gering.
+Um als reelle Testplattform zu dienen muss die Zielplattform möglichst
+vollständig emuliert werden.\newline
+Es soll daher für fehlende Peripherie eine prototypische Implementierung
+entwickelt werden.
 Die Implementierung aller fehlenden Peripheriebaugruppen ist sehr zeitaufwändig
 und im im Rahmen dieser Arbeit nicht möglich.
-Daher soll im ersten Teil geeignete Peripherie ausgewählt werden.
-Falls möglich sollen dabei heterogene Peripheriebaugruppen identifiziert und
+Im ersten Schritt soll dafür geeignete Peripherie ausgewählt werden.
+Falls möglich sollen heterogene Peripheriebaugruppen identifiziert und
 zusammengefasst werden.
-Für die Integration der Peripherie werden zwei verschiedene Ansätze
-betrachtet.\newline
+Anschließend werden für die Integration der Peripherie zwei verschiedene
+Ansätze betrachtet.\newline
 Der erste Ansatz befasst sich mit der Erweiterung des bestehenden OpenSource-
 Projekts durch die direkte Implementierung des Mikrocontrollers in QEMU.
-Als Basis dafür dienen die bereits bestehenden Integration verwandter
-Mikroconroller Modelle.
+Als Basis dafür dienen die bereits bestehenden Integrationen verwandter
+Mikrocontroller Modelle.
 Die bereits integrierte Peripherie soll, falls möglich, wieder verwendet und
 anschließend um die neue, prototypische Implementierung erweitert
 werden.\newline
 Der zweite Ansatz soll die Möglichkeit untersuchen, fehlende Peripherie
-mithilfe externer Prozesse zu simulieren.
-Diese Prozesse kommunizieren mittels \ac{ipc} mit QEMU und sind nicht direkter
-Bestandteil des Projekts.
-Dieser Ansatz wurde 2021 bereits auf einer Entwickler Konferenz vorgestellt.
-\cite{KplCodeDive}
-Als Basis dienen erneut die bereits bestehenden Integration verwandter
-Mikroconroller Modelle.
-Beide Ansätze sollen abschließend nach \textit{Komplexität und Erweiterbarkeit
-der Implementierung}, sowie mittels exemplarischer Beispiel-Anwendungen
-getestet und bewertet werden.
+mithilfe externer Prozesse zu emulieren.
+Diese Prozesse kommunizieren mittels \acs{ipc} mit QEMU und sind
+nicht direkter Bestandteil des Projekts.
+Dieser Ansatz wurde 2021 auf einer Entwickler Konferenz vorgestellt
+\cite{KplCodeDive}.
+Als Basis dienen auch hier die bereits bestehenden Integrationen verwandter
+Mikrocontroller Modelle.
+Beide Ansätze sollen abschließend nach Komplexität und Erweiterbarkeit der
+Implementierung, sowie mittels exemplarischer Beispiel-Anwendungen getestet und
+bewertet werden.
 % TODO: Anwendungen auflisten? Bezug zu implementierter Peripherie herstellen
 % Bereits implementierte Peripher auch nutzen und bewerten
 
