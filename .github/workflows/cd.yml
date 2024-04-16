@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v3
+      - name: Build docker image
+        run: docker build -t thesis-builder .
+      - name: Build pdf
+        run: docker run -v $(pwd):/bachelor-thesis thesis-builder ./skripte/2pdf.sh
+      - name: Publish pdf
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.PDF_TOKEN }}"
+          automatic_release_tag: "latest"
+          files: |
+            *.pdf
