@@ -4,7 +4,7 @@
 % Inhalt
 %##########################################################
 \pagenumbering{arabic}
-\chapter{Einleitung}
+\chapter{Thema}
 
 Eingebettete Systeme kann man heutzutage in nahezu jedem elektronischen Gerät
 finden.
@@ -13,35 +13,29 @@ Haussteuerung, über den Staubsaugroboter der mittels WiFi-Kommunikation durch
 die App auf dem Smartphone gesteuert werden kann, hin zu Satelliten und
 selbstfahrenden Autos.
 All dies benötigt eingebettete Systeme und deren Software Applikationen.
-Die Entwicklung dieser wird allerdings von verschiedenen Herausforderungen
-begleitet, welche im Gegensatz zur Entwicklung von \textit{Web-} oder
-\textit{Desktop} Anwendungen nicht auftreten.\newline
-Die große Vielfalt an Anwendungsbereichen führt zu vielen verschiedenen,
-individuell zusammengestellten elektronischen Baugruppen, welche auf einer
-großen Auswahl verschiedener Mikroprozessor Plattformen und Architekturen
-basieren.\newline
-% TODO: system-on-chip (SoC) mit integrieren
+Die Entwicklung dieser Software wird allerdings von verschiedenen
+Herausforderungen begleitet, welche bei der Entwicklung von \textit{Web-}
+oder \textit{Desktop} Anwendungen nicht auftreten.\newline
+Die große Vielfalt an Anwendungsbereichen führt zu vielen stark
+spezialisierten elektronischen Baugruppen, welche auf einer großen Auswahl
+verschiedener Mikroprozessor Plattformen und Architekturen basieren.\newline
 Darüber hinaus gibt es selbst für einzelne Architekturen wie beispielsweise
 \textit{ARM} oder \textit{RISC-V} von Hersteller zu Hersteller verschiedene
 Mikrocontroller Varianten.
-Diese unterscheiden sich zum Bespiel in der Menge an Ressourcen, wie Flash-
+Diese unterscheiden sich zum Beispiel in der Menge an Ressourcen, wie Flash-
 und \acs{ram} Speicher und der Ausstattung mit verschiedenen
 Peripherie Baugruppen, wie Ethernet oder \acs{can}.\newline
 Software für eingebettete Systeme muss also individuell auf unterschiedliche
 Zielplattformen angepasst werden.
-% TODO: STM32 Modell auf MCU hier bereits einbringen oder erst in
-% Problemstellung? Möglichst als Beispiel für eine Zielplattform einarbeiten
 
 \section{Problemstellung}
 
-% TODO: 32 vs 64 bit Speicheraddressierung einbringen?
-Mikrocontroller eignen sich nicht zur Entwicklung von Software.
-Sie besitzen deutlich weniger Speicher und Rechenleistung als beispielsweise
-Workstations oder Laptops.
-Auch die Anbindung nötiger Peripheriegeräte zur Bedienung wie Maus, Tastatur
-oder Bildschirm ist nicht ohne weiteres möglich.
-Darüber hinaus ist die CPU Architektur der Ziel- und Entwicklungsplattform in
-der Regel unterschiedlich, was eine Inkompatibilität von Ziel- und
+Mikrocontroller sind hinsichtlich Speicher- und Rechenleistung, sowie der
+Schnittstellen auf Spezialanwendungen ausgelegt.
+Die Anforderungen der Softwareentwicklung an ein Entwicklungssystem können
+von einem Mikrocontroller nicht erfüllt werden.
+Darüber hinaus sind die CPU Architekturen der Ziel- und Entwicklungsplattform
+in der Regel unterschiedlich, was eine Inkompatibilität von Ziel- und
 Entwicklungsplattform auf Maschinenbefehl-Ebene zur Folge hat.\newline
 Aufgrund dieser Punkte können Anwendungen für eingebettete Systeme nicht
 einfach auf der Entwicklungsplattform gebaut und ausgeführt werden.
@@ -49,7 +43,8 @@ Um die Firmware zu erstellen ist die Nutzung plattformunabhängiger
 \textit{Toolchains} zur \textit{Cross-Kompilierung} nötig.
 Dies verlangsamt den Entwicklungsprozess, da Firmware, zum Beispiel für Tests,
 immer erst auf den Mikrocontroller \textit{geflasht} werden muss.
-Das Flashen geschieht im Entwicklungsprozess meist unter Zuhilfenahme
+Die Folge ist ein, unter Umständen langwieriger, Neustart des Mikrocontrollers.
+Das Flashen geschieht im Entwicklungsprozess außerdem meist unter Zuhilfenahme
 von extra Hardware, welche genutzt wird um die Firmware auf den Mikrocontroller
 zu schreiben.\newline
 Auch der direkte Zugriff auf das System ist nicht immer gewährleistet.
@@ -86,34 +81,33 @@ Die Notwendigkeit für extra Hardware zum flashen und \textit{debuggen} der
 Software wird reduziert.
 Das erhöht die Entwicklungsgeschwindigkeit und macht Entwickler Hardware- und
 ortsunabhängiger.
-% TODO: Verweis Web-Engineering Vorlesung - Docker etc -> ähnliches Prinzip
 
 \section{Zielstellung}
 
-Im Rahmen dieser Arbeit soll eine Herangehensweise vorgestellt werden, mithilfe
-derer man Software für einen 32-Bit Mikrocontroller unabhängig von der
-tatsächlichen Hardware entwickeln kann.
-Zur Emulation von \acs{cpu} und \acs{soc} soll
-das Programm \textit{QEMU} genutzt werden.\newline
-Für diese Arbeit wurde das Mikrocontroller Modell \textbf{STM32F429} der
-\textbf{STM32F4} Familie als Zielplattform ausgewählt.
-Zum Zeitpunkt dieser Arbeit ist die Emulation der CPU möglich, es besteht aber
-keine Implementation für den SoC in QEMU.
+Im Rahmen dieser Arbeit soll eine Herangehensweise entwickelt und überprüft
+werden, mithilfe derer man Software für einen 32-Bit Mikrocontroller unabhängig
+von der tatsächlichen Hardware entwickeln kann.
+Zur Emulation von \acs{cpu} und \acs{soc} soll das Programm \textit{QEMU}
+genutzt werden.
+Als Zielplattform für diese Arbeit wurde das Mikrocontroller Modell
+\textbf{STM32F429} der \textbf{STM32F4} Familie ausgewählt.
+Gegenwärtig ist die Emulation der CPU möglich, es besteht aber keine
+Implementation für den SoC in QEMU.
 Es existieren allerdings Integrationen für Modelle verwandter Produktfamilien,
 so zum Beispiel für die Mikrocontroller \textbf{STM32F405} oder
 \textbf{STM32F205}\cite{QemuSTMDoku}.
 Die Modelle der Produktfamilien \textbf{F4} und \textbf{F2} unterscheiden sich
 nur geringfügig in Konfiguration und Speichergrößen und können daher als Basis
-zur Emulation des gewählten Modells dienen.
-Die Anzahl unterstützter Peripherie ist auch für die bereits integrierten
-Modelle gering.
+zur Emulation des gewählten Modells in QEMU dienen.
+Allerdings ist die Anzahl unterstützter Schnittstellen für die bereits
+integrierten Modelle gering.
 Um als reelle Testplattform zu dienen muss die Zielplattform möglichst
 vollständig emuliert werden.\newline
-Es soll daher für fehlende Peripherie eine prototypische Implementierung
-entwickelt werden.
+Für den ausgewählten Mikrocontroller soll dementsprechend eine prototypische
+Implementierung der fehlenden Schnittstellen konzipiert werden.
 Die Implementierung aller fehlenden Peripheriebaugruppen ist sehr zeitaufwändig
-und im im Rahmen dieser Arbeit nicht möglich.
-Im ersten Schritt soll dafür geeignete Peripherie ausgewählt werden.
+und im Rahmen dieser Arbeit nicht möglich.
+Für diese Arbeit soll daher geeignete Peripherie ausgewählt werden.
 Falls möglich sollen heterogene Peripheriebaugruppen identifiziert und
 zusammengefasst werden.
 Anschließend werden für die Integration der Peripherie zwei verschiedene
@@ -134,32 +128,9 @@ Dieser Ansatz wurde 2021 auf einer Entwickler Konferenz vorgestellt
 Als Basis dienen auch hier die bereits bestehenden Integrationen verwandter
 Mikrocontroller Modelle.
 Beide Ansätze sollen abschließend nach Komplexität und Erweiterbarkeit der
-Implementierung, sowie mittels exemplarischer Beispiel-Anwendungen getestet und
+Implementierung, sowie mittels exemplarischer Anwendungen getestet und
 bewertet werden.
 % TODO: Anwendungen auflisten? Bezug zu implementierter Peripherie herstellen
 % Bereits implementierte Peripher auch nutzen und bewerten
 
-\newpage
-
-\section{Methodik}
-
-Im Methodik-Abschnitt (eine eigene Section) einer Arbeit stellen Sie die Methoden dar,
-die Sie verwendet haben oder vorhaben zu verwenden, um die Fragestellung zu beantworten. 
-In diesem Abschnitt erläutern Sie, welche Methoden umgesetzt wurden (oder auch angedacht),
-um die Hypothesen zu testen und die Fallstudie durchzuführen. 
-Welche Methoden für Ihre Arbeit geeignet sind, ist auch ein wesentlicher Punkt Ihres
-angestrebten Titels und somit ein zu bewertender Teil dieser Arbeit. 
-
-\underline{Aber \textbf{mindestens} folgende Punkte}\\
-Inhalt des ersten Kapitels (im Allgemeinen):
-\begin{itemize}
-    \item Thematische Einführung, umreißen des Themas \dots wo befinden wir uns?
-    \item Herausstellen des Problems und warum es eines ist was gelöst werden sollte.
-    \item Herausstellen der tatsächlichen Ziel-/Fragestellung, welche bearbeitet werden wird.
-    \item Eine Abgrenzung was diese Arbeit ist und was sie nicht ist.
-    \item Stand der Forschung \dots Was existiert bereits? Wie gut passt das auf das Problem?
-    \begin{itemize}
-        \item Referenzen mittels cite: \cite[S.~111]{jsch2011} \cite[S.~27f]{Tane2014}
-    \end{itemize}
-    \item Eine abgeleitete Methodik $\rightarrow$ basierend auf der Literatur und Ihrem Wissen: wie haben Sie nun vor Ihr Problem zu lösen? Vllt durch \cite{9429985}?
-\end{itemize}
+%\newpage
