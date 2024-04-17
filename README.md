@@ -23,3 +23,15 @@ docker build -t thesis-builder .
 ```sh
 docker run --rm -it -v $(pwd):/bachelor-thesis thesis-builder ./skripte/2pdf.sh
 ```
+
+## Automatic PDF build
+
+With every push to **main** a pipeline-job is triggered.
+The pdf is built inside the CI using the `2pdf.sh` script and the `Dockerfile`.
+After each successful built a release is created and tagged with the *Unix
+timestamp*.
+
+To inspect the Release Tag use the `date` utility:
+```sh
+date -d @$RELEASE_TAG
+```

@@ -1,0 +1,61 @@
+stages:
+  - build
+  - upload
+  - release
+
+variables:
+  PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/2024-j.schulze-emulation-eines-32bit-microcontrollers"
+
+build_job:
+  stage: build
+  image: docker-registry.senec.com/senec/embedded/thesis-and-internships/2024-j.schulze-emulation-eines-32bit-microcontrollers
+  script:
+    - "./skripte/2pdf.sh"
+    - PDF_NAME="$(ls | grep ".pdf" | tail -n1)"
+      # use unix timestamp as Release-Tag
+    - TIMESTAMP_TAG="$(date +"%s")"
+    - echo "Created ${TIMESTAMP_TAG} tag"
+    - echo "PDF_NAME=${PDF_NAME}" >> build.env
+    - echo "TIMESTAMP_TAG=${TIMESTAMP_TAG}" >> build.env
+    - mkdir out
+    - mv ${PDF_NAME} out/
+  artifacts:
+    paths:
+      - out/
+    reports:
+      dotenv: build.env
+
+upload_job:
+  stage: upload
+  image: curlimages/curl:latest
+  needs:
+    - job: build_job
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - echo "Use tage $TIMESTAMP_TAG"
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+      --upload-file out/${PDF_NAME} "${PACKAGE_REGISTRY_URL}/$TIMESTAMP_TAG/$PDF_NAME"
+
+release_job:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: build_job
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - echo "Use tag ${TIMESTAMP_TAG}"
+    - |
+      release-cli create --name "PDF Version $PDF_NAME" \
+      --tag-name $TIMESTAMP_TAG \
+      --description "${CI_COMMIT_TAG_MESSAGE}" \
+      --assets-link "{\"name\":\"$PDF_NAME\", \
+      \"url\":\"${PACKAGE_REGISTRY_URL}/$TIMESTAMP_TAG/$PDF_NAME\"}"
