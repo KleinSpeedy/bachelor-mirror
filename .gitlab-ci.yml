@@ -14,9 +14,12 @@ build_job:
     - PDF_NAME="$(ls | grep ".pdf" | tail -n1)"
       # use unix timestamp as Release-Tag
     - TIMESTAMP_TAG="$(date +"%s")"
+      # Format and use as release title
+    - RELEASE_TITLE="$(date -d @$TIMESTAMP_TAG --rfc-3339=seconds)"
     - echo "Created ${TIMESTAMP_TAG} tag"
     - echo "PDF_NAME=${PDF_NAME}" >> build.env
     - echo "TIMESTAMP_TAG=${TIMESTAMP_TAG}" >> build.env
+    - echo "RELEASE_TITLE=${RELEASE_TITLE}" >> build.env
     - mkdir out
     - mv ${PDF_NAME} out/
   artifacts:
@@ -54,7 +57,7 @@ release_job:
   script:
     - echo "Use tag ${TIMESTAMP_TAG}"
     - |
-      release-cli create --name "PDF Version $PDF_NAME" \
+      release-cli create --name "$RELEASE_TITLE" \
       --tag-name $TIMESTAMP_TAG \
       --description "${CI_COMMIT_TAG_MESSAGE}" \
       --assets-link "{\"name\":\"$PDF_NAME\", \

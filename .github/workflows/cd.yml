@@ -4,18 +4,28 @@ on:
       - main
 jobs:
   build:
+    env:
+      TIMESTAMP_TAG: ''
+      RELEASE_TITLE: ''
     runs-on: ubuntu-latest
+    container:
+      image: kleinspeedy/thesis-builder
     steps:
       - name: Setup
         uses: actions/checkout@v3
-      - name: Build docker image
-        run: docker build -t thesis-builder .
       - name: Build pdf
-        run: docker run -v $(pwd):/bachelor-thesis thesis-builder ./skripte/2pdf.sh
+        run: ./skripte/2pdf.sh
+      - name: Release tag
+        run: |
+          echo "TIMESTAMP_TAG=$(date +"%s")" >> $GITHUB_ENV
+      - name: Release title
+        run: |
+          echo "RELEASE_TITLE=$(date -d @$TIMESTAMP_TAG --rfc-3339=seconds)" >> $GITHUB_ENV
       - name: Publish pdf
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.PDF_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: ${{ env.TIMESTAMP_TAG }}
+          title: "${{ env.RELEASE_TITLE }}"
           files: |
             *.pdf
