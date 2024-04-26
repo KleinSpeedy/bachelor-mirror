@@ -1,9 +1,12 @@
 on:
+  workflow-dispatch:
   push:
     branches:
       - main
 jobs:
   build:
+    env:
+      TIMESTAMP_TAG: ''
     runs-on: ubuntu-latest
     steps:
       - name: Setup
@@ -12,10 +15,12 @@ jobs:
         run: docker build -t thesis-builder .
       - name: Build pdf
         run: docker run -v $(pwd):/bachelor-thesis thesis-builder ./skripte/2pdf.sh
+      - name: Create release tag
+        run: echo "TIMESTAMP_TAG=$(date +"%s")" >> $GITHUB_ENV
       - name: Publish pdf
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.PDF_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: ${{ env.TIMESTAMP_TAG }}
           files: |
             *.pdf
