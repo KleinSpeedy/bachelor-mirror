@@ -27,5 +27,6 @@ jobs:
           repo_token: "${{ secrets.PDF_TOKEN }}"
           automatic_release_tag: ${{ env.TIMESTAMP_TAG }}
           title: "${{ env.RELEASE_TITLE }}"
+          prerelease: false
           files: |
             *.pdf
