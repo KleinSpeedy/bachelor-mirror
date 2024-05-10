@@ -49,7 +49,7 @@ rename_pdf()
     fi
 }
 
-while getopts ":hn" opt; do
+while getopts ":hnc" opt; do
     case $opt in
         h) # display usage
             help
@@ -57,6 +57,10 @@ while getopts ":hn" opt; do
         n) # dont delete artifacts
             build_pdf
             rename_pdf
+            exit;;
+        c) # script runs in CI, do not rename pdf to enable stable link
+            build_pdf
+            $PWD/skripte/clean.sh
             exit;;
         ?) # invalid arguments
             echo "Invalid argument: ${opt}"

@@ -17,7 +17,7 @@ jobs:
       - name: Setup
         uses: actions/checkout@v3
       - name: Build pdf
-        run: ./skripte/2pdf.sh
+        run: ./skripte/2pdf.sh -c
       - name: Release title
         run: |
           echo "RELEASE_TITLE=$(date -d @${{ github.ref_name }} --rfc-3339=seconds)" >> $GITHUB_ENV
