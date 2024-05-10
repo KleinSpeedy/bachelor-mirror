@@ -20,8 +20,9 @@ jobs:
         run: ./skripte/2pdf.sh
       - name: Release title
         run: |
-          echo "RELEASE_TITLE=$(date -d @$TIMESTAMP_TAG --rfc-3339=seconds)" >> $GITHUB_ENV
-      - uses: ncipollo/release-action@v1
+          echo "RELEASE_TITLE=$(date -d @${{ github.ref_name }} --rfc-3339=seconds)" >> $GITHUB_ENV
+      - name: Publish pdf
+        uses: ncipollo/release-action@v1
         with:
           name: "${{ env.RELEASE_TITLE }}"
           token: "${{ secrets.PDF_TOKEN }}"
