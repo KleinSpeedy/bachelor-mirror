@@ -1,7 +1,10 @@
+name: Automatic release
+
 on:
   push:
-    branches:
-      - main
+    tags:
+    - '*'
+
 jobs:
   build:
     env:
@@ -15,18 +18,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Build pdf
         run: ./skripte/2pdf.sh
-      - name: Release tag
-        run: |
-          echo "TIMESTAMP_TAG=$(date +"%s")" >> $GITHUB_ENV
       - name: Release title
         run: |
           echo "RELEASE_TITLE=$(date -d @$TIMESTAMP_TAG --rfc-3339=seconds)" >> $GITHUB_ENV
-      - name: Publish pdf
-        uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: ncipollo/release-action@v1
         with:
-          repo_token: "${{ secrets.PDF_TOKEN }}"
-          automatic_release_tag: ${{ env.TIMESTAMP_TAG }}
-          title: "${{ env.RELEASE_TITLE }}"
-          prerelease: false
-          files: |
-            *.pdf
+          name: "${{ env.RELEASE_TITLE }}"
+          token: "${{ secrets.PDF_TOKEN }}"
+          artifacts: "*.pdf"
