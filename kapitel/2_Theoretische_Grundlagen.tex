@@ -88,7 +88,14 @@ Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
         statt.
         Es wird kein Hypervisor benötigt.
         Diese Technik findet vorrangig bei Großrechnern und Servern Anwendung.
-    \newpage
+        \clearpage
+        \begin{figure}[!htb]
+            \centering
+            \includegraphics[width=0.5\textwidth]{anlagen/bilder/Partitionierung}
+            \caption{Partitionierung der Hardware in individuelle
+            Systeme\cite{PartAbb_BSKompakt}}
+            \label{fig:Partitionierung}
+        \end{figure}
     \item[Paravirtualisierung]
         Bei der \textit{Paravirtualisierung} wird ein Typ-1-Hypervisor genutzt,
         um die physischen Hardware-Ressourcen des Gesamtsystems zu verwalten.
@@ -152,6 +159,26 @@ Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
         Der Unterschied zwischen Virtualisierung und Emulation wird
         anschließend erläutert.
 \end{description}
+% Put bit of space between text and image
+\vspace{1ex}
+
+\begin{figure}[h]
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{anlagen/bilder/volle_Virtualisierung}
+        \caption{Typ-2-Hypervisor lauft neben anderen Anwendungen auf
+        Host-Betriebssystem}
+        \label{fig:Volle_Virtualisierung}
+    \end{subfigure}
+    \hspace{1ex}
+    \begin{subfigure}{0.5\textwidth}
+        \includegraphics[width=0.9\linewidth]{anlagen/bilder/Software_Emulation}
+        \caption{Software-Applikation läuft in emulierter Umgebung}
+        \label{fig:Software_Emulation}
+    \end{subfigure}
+    \caption{Gegenüberstellung (a) vollständiger
+    Virtualisierung\cite{VollVirtAbb_BSKompakt} und (b) Software
+    Emulation\cite{SoftEmuAbb_BSKompakt}}
+\end{figure}
 
 \subsection{Hardware-Emulation}
 
