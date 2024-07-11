@@ -5,6 +5,7 @@
 %##########################################################
 
 \clearpage
+
 \chapter{Implementation}
 
 Auch wenn der Name des Chapters eher auf eine Art Tagebucheintrag hindeutet, ist der Anteil der Ergebnisdarstellung hier keineswegs zu unterschlagen und unabdingbar.
@@ -21,50 +22,7 @@ uninteressant. Daher wird hier gleich auf die Ergebnisse wert gelegt. Hier werde
 Was beide Ansätz eint, ist eine Interpretation und Kontextualisierung der Ergebnisse. Was sind die Ergebnisse und was \enquote{lesen} Sie daraus ab?
 Gern können Sie hier aufgtretene Problem diskutieren, jedoch \textbf{nicht} welchen Wert oder welche Relevanz Ihre Ergebnisse haben.\\
 
-
-\newpage
-
-Zusammenhängende Ergebnisse werden vorteilhaft in Form von Tabellen (wie in \ref{TabLaufzeiten}) dargestellt.
-
-\begin{table}[h!]
-	\begin{center}
-        \caption{Laufzeiten in sec, gemessen mit einem Intel xy-8 Ghz Prozessor}\label{TabLaufzeiten}
-		\begin{tabular}{|c||c|c|c|}
-			\hline 
-			& Verfahren X & Verfahren Y & Verfahren Z \\ 
-			\hline 
-			\hline 
-			\hspace{.1cm}
-			Problem A & 300 & 340 & 210 \\ 
-			\hline 
-			\hspace{.1cm}
-			Problem B & 730 & 580 & 540 \\ 
-			\hline 
-			\hspace{.1cm}
-			Problem C & 610 & 420 & 440 \\ 
-			\hline 
-			\hspace{.1cm}
-			Problem D & 895 & 790 & 520 \\ 
-			\hline 
-		\end{tabular} 
-	\end{center}
-\end{table}
-
-
-Funktionale Zusammenhänge hingegen lassen sich in Form von Diagrammen oder Grafiken (Siehe \ref{fig:Abbildung1}) darstellen.
-
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=1\textwidth]{anlagen/bilder/Abbildung1}
-	\caption{Statistical analysis of the received power}
-	\label{fig:Abbildung1}
-\end{figure}
-
 Ein guter Ergebnisteil erfordert Literaturzitate (vielleicht auch gar keine) und die Bekanntgabe des Ergebnisses sollte von einer Interpretation und Diskussion begleitet werden. 
-
-
-\newpage
 
 \underline{Aber \textbf{mindestens} folgende Punkte}\\
 Inhalt des vierten Kapitels (im Allgemeinen):
@@ -79,3 +37,18 @@ Inhalt des vierten Kapitels (im Allgemeinen):
         \item \glqq schlechter\grqq{} sein, bedeutet nicht, dass Ihre Arbeit schlecht ist! Am Ende zählt Ihr Ansatz und die Idee
     \end{itemize}
 \end{itemize}
+
+\section{Implementationsdetails}
+Was wurde implementiert, wofür hat es nicht gereicht?
+Warum hat es nicht gereicht?
+Ablauf/Schritte zur Implementation (Erweiterung, IPC, Testprogramme)?
+
+\subsection{QEMU Erweiterungen}
+Wie sind Erweiterungen integriert wurden, was waren Probleme?
+Seperate Repos, Aufstartverhalten?
+Debugging QEMU, Debugging in QEMU?
+Probleme mit IPC Kommunikation.
+
+\subsection{Testverhalten}
+Was sagen Testergebnisse aus?
+Schwierigkeiten bei Generierung von Tests.

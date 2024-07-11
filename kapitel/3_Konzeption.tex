@@ -22,3 +22,26 @@ Inhalt des dritten Kapitels (im Allgemeinen):
     \item Wie haben Sie vor die Implementation vorzunehmen? Besonderheiten? Überlegungen? Einflüsse? Probleme?
     \item Gießen Sie Ihre Idee zunächst in ein theoretisches Konstrukt $\rightarrow$ Kapitel Vier ist der Beweis, dass Ihre Überlegungen (nicht) funktionieren.
 \end{itemize}
+
+% ============================================================================
+
+\section{Auswahl der Peripherie}
+Welche peripherie ausgewählt und warum?
+Vorstellung Kriterien, Problemdiskussion?
+
+\section{QEMU Erweiterung}
+Wie erweitert man QEMU, entwicklungsumgebung, Abhängigkeiten, etc.
+Konzeption der integration von device, peripherie device und soc in QEMU.
+
+\section{Erweiterung durch generisches IPC-Modell}
+Erklärung Konzept, kurze Einordnung/Vergleich zu QEMU Erweiterung
+
+\section{Testprogramme und Teststrategie}
+was sollen sie sein/testen?
+Nutzung um Initial überhaupt zu testen ob UART (Valide) funktioniert auch mit
+Blick auf STM32F2 (Pinkompatibilität).
+Wie sind testprojekte aufgebaut, Erklärung startup verhalten.
+Verifikation korrektes Verhalten mittels Test Programm und realen Tests.
+Wie teste ich mittels QEMU?
+Was ist der erwartete Output (zb. UART) ?
+Testergebnisse in realer Umgebung?
