@@ -271,8 +271,9 @@ Die ARM Mikroprozessor-Familien werden in 3 verschiedene Familien unterteilt.
 \textit{Cortex-M}, \textit{Cortex-R} und \textit{Cortex-A} Mikroprozessoren.
 
 % TODO: Welche Familien 32 bzw 64 Bit, Befehlssatzarchitektur, CISC/RISC
+% Multicore ? Multi threaded Applikationen
 \begin{description}
-    \item[Cortex-M] 
+    \item[Cortex-M]
     Die \textit{Cortex-M} Familie ist eine Familie von 32-bit Mikroprozessoren,
     welche erstmals 2005 veröffentlicht wurden\cite{DefGuideCM34_JYiu}.
     Die Prozessor-Familie ist für eine besonders breite Fläche an
@@ -349,8 +350,8 @@ Darüber hinaus werden auch Rust, Java oder Javascript genutzt.
 \newline
 Software Applikationen für eingebettete Systeme reichen von sogenannten
 \textit{Bare Metal} Applikationen, über Applikationen mit integriertem
-\textit{\ac{rtos}} bis hin zu Anwendungen die im Kontext einens \textit{Embedded Linux}
-Betriebsystem laufen.
+\textit{\ac{rtos}} bis hin zu Anwendungen die auf einem \enquote{normalen}
+Mehrbenutzer-Betriebssystem laufen.
 \newline
 Bare Metal bedeutet, dass der Zugriff auf Hardware-Ressourcen und
 Peripherie-Schnittstellen nicht von einer Abstraktions-Schicht des
@@ -359,3 +360,22 @@ Er erfolgt direkt über die Anwendungssoftware.
 Somit liegen dynamische Speicherallokation oder auch die Verwaltung
 konkurrenter Zugriffe auf Peripherie-Schnittstellen in der Verantwortung des
 Softwareentwicklers.
+\newline
+Ein Echtzeitbetriebssystem ermöglicht eine konkurrente Ausführung mehrere
+Aufgaben bei gleichzeitiger Einhaltung fester Zeitbedingungen.
+Maßgebend für ein Echtzeitbetriebssystem ist dabei nicht die Schnelligkeit
+einer Reaktion auf ein Ereignis, sondern die Einhaltung einer fest definierten
+Zeitschranke (englisch: \textit{Deadline})\cite{BSKompakt_GrundlagenBs}.
+\newline
+Mit steigender Rechenleistung und Verfügbarkeit von Speicher im Umfeld der
+eingebetteten Systeme steigen auch die Anforderungen an die parallele,
+beziehungsweise konkurrente, Abbarbeitung einer Vielzahl an Aufgaben.
+Eine Alternative zu herkömmlichen Echtzeitbetriebssystemen ist \textit{Embedded
+Linux}.
+Es handelt sich um ein modifiziertes Betriebssystem auf Basis des
+\textit{Linux-Kernels}.
+Die vergleichsweise einfache Anpassbarkeit des Linux Kernels und die hohe
+Verfügbarkeit an kompatiblen Hardware-Plattformen ermöglichen eine Vielzahl an
+Einsatzmöglichkeiten\cite{UbuntuBlogEmbeddedLinux}.
+
+%TODO: IPC erklären für Code Dive Integration
