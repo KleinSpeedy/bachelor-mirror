@@ -8,6 +8,7 @@
 
 \chapter{Implementation}
 
+\iffalse
 Auch wenn der Name des Chapters eher auf eine Art Tagebucheintrag hindeutet, ist der Anteil der Ergebnisdarstellung hier keineswegs zu unterschlagen und unabdingbar.
 
 Unter \enquote{Ergebnisse} sollte eine klare Aussage über die Entdeckungen des Autors gemacht werden, ohne jedoch auf experimentelle Details oder die große Bedeutung der Ergebnisse einzugehen. 
@@ -37,6 +38,7 @@ Inhalt des vierten Kapitels (im Allgemeinen):
         \item \glqq schlechter\grqq{} sein, bedeutet nicht, dass Ihre Arbeit schlecht ist! Am Ende zählt Ihr Ansatz und die Idee
     \end{itemize}
 \end{itemize}
+\fi
 
 \section{Implementationsdetails}
 Was wurde implementiert, wofür hat es nicht gereicht?
@@ -45,6 +47,7 @@ Ablauf/Schritte zur Implementation (Erweiterung, IPC, Testprogramme)?
 
 \subsection{QEMU Erweiterungen}
 Wie sind Erweiterungen integriert wurden, was waren Probleme?
+% TODO: Reset values bei gpio müssen ins Device gepassed werden -> Aufwendig da komplexe Instanziierung der Objekte
 Seperate Repos, Aufstartverhalten?
 Debugging QEMU, Debugging in QEMU?
 Probleme mit IPC Kommunikation.

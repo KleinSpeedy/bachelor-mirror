@@ -69,7 +69,7 @@ Hypervisor}, läuft direkt auf der Systemhardware, ohne ein dazwischenliegendes
 Betriebssystem.
 Er übernimmt die Verteilung der Hardware-Ressourcen auf die unterschiedlichen
 Prozesse und läuft im privilegierten Kernelmodus\cite{BSKompakt_Syscall}.
-Ein Bespiel für einen Typ-1-Hypervisor ist das \ac{kvm} Modul des Linux
+Ein Beispiel für einen Typ-1-Hypervisor ist das \ac{kvm} Modul des Linux
 Kernels.
 \newline
 Ein \textit{Typ-2-Hypervisor}, auch \textit{hosted Hypervisor} genannt, läuft
@@ -222,12 +222,15 @@ ausführbare Betriebssystem-Images erstellt und bearbeitet werden können.
 % TODO: Nähere Beschreibung von QEMU
 %\subsection{Funktionsweise}
 %User Mode vs Full System Emulation, Projektstruktur ?, TCG, Device und Board
+% TODO: QOM und Device realization -> QEMU subsystem information
+% TODO: Wie wird Board erstellt, in welcher beziehung stehen Board und GPIO controller
+% TODO: Resettable Interface -> Verweis auf Mikrocontroller Reset?
 %
 \subsection{Alternativen}
 
 Das QEMU Projekt besteht bereits seit einiger Zeit, daher kann eine hohe
 Ausgereiftheit der Anwendung angenommen werden.
-Darüber hinaus exisitieren bereits Implementationen für Mikrocontroller Modelle
+Darüber hinaus existieren bereits Implementationen für Mikrocontroller Modelle
 der Produkt Familie STM32F4.
 Es existieren einige Alternativen zu QEMU, davon sollen 2 kurz vorgestellt
 werden.
@@ -340,13 +343,16 @@ auf einem realen System zu testen müssen mehrere Schritte durchlaufen werden.
 Im folgenden sollen die Softwaretechnischen Rahmenbedingungen für die
 Mikrocontroller-Entwicklung kurz vorgestellt und erläutert werden.
 
-% TODO:  Was ist CMSIS, wofür wird es gebraucht, wer hat es eingeführt
+% TODO: Was ist CMSIS, wofür wird es gebraucht, wer hat es eingeführt
+% TODO: HAL was ist es, wie eingesetzt?
+% TODO: Middleware
 \subsection{Softwaretechnische Grundlagen}
 
 % TODO: Quelle
 Die de-facto Standard-Programmiersprachen im Umfeld der eingebetteten Systeme
-sind \textbf{C} und \textbf{C++}.
-Darüber hinaus werden auch Rust, Java oder Javascript genutzt.
+sind \textit{C} und \textit{C++}.
+Darüber hinaus werden auch \textit{Rust}, \textit{Java} oder
+\textit{Javascript} genutzt.
 \newline
 Software Applikationen für eingebettete Systeme reichen von sogenannten
 \textit{Bare Metal} Applikationen, über Applikationen mit integriertem
@@ -355,7 +361,7 @@ Mehrbenutzer-Betriebssystem laufen.
 \newline
 Bare Metal bedeutet, dass der Zugriff auf Hardware-Ressourcen und
 Peripherie-Schnittstellen nicht von einer Abstraktions-Schicht des
-Bettriebssystem verwaltet wird.
+Betriebssystem verwaltet wird.
 Er erfolgt direkt über die Anwendungssoftware.
 Somit liegen dynamische Speicherallokation oder auch die Verwaltung
 konkurrenter Zugriffe auf Peripherie-Schnittstellen in der Verantwortung des
@@ -378,4 +384,8 @@ Die vergleichsweise einfache Anpassbarkeit des Linux Kernels und die hohe
 Verfügbarkeit an kompatiblen Hardware-Plattformen ermöglichen eine Vielzahl an
 Einsatzmöglichkeiten\cite{UbuntuBlogEmbeddedLinux}.
 
+\subsection{Interprozesskommunikation}
+
+Bei \ac{ipc} handelt es sich um eine Form der Informationsübertragung zischen
+unterschiedlichen Prozessen eines Betriebssystems.
 %TODO: IPC erklären für Code Dive Integration
