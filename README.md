@@ -24,6 +24,16 @@ docker build -t thesis-builder .
 docker run --rm -it -v $(pwd):/bachelor-thesis thesis-builder ./skripte/2pdf.sh
 ```
 
+## Implementation repositories
+
+Instead of adding all repositories as submodules they are linked here to avoid
+a massive git tree:
+
+* [**Qemu EDI extension**](https://github.com/KleinSpeedy/qemu-extension/tree/thesis-code-dive-extension)
+* [**Qemu device extension**](https://github.com/KleinSpeedy/qemu-extension/tree/thesis-device-extension)
+* [**GPIO test project**]()
+* [**UART test project**]()
+
 ## Automatic PDF build
 
 With every push to **main** a pipeline-job is triggered.
