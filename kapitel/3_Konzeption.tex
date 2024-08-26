@@ -8,6 +8,7 @@
 \chapter{Konzeption}
 
 \section{Auswahl der Peripherie}
+\label{sec:concept-periphery-selection}
 
 Für diese Arbeit wurde das \textit{\ac{gpio}} und das
 \textit{\ac{uart}}-Peripheriemodul für Tests und Implementierung ausgewählt.
@@ -44,6 +45,7 @@ Die Implementierung kann daher nur als Orientierung dienen und muss
 entsprechend angepasst werden.
 
 % TODO: Entwicklungsumgebung
+% TODO: Unterschied Simulation und Emulation
 \section{QEMU Erweiterung}
 
 QEMU unterscheidet bei der Emulation von ARM Systemen zwischen Maschinen und
@@ -58,19 +60,20 @@ Die Maschine, bzw. das Entwicklungsboard, agiert dabei als Container für den
 SoC.
 Die meisten Funktionalitäten, sowie die Peripherie, werden im SoC
 implementiert und der Maschine zur Verfügung gestellt.
-Die CPU ist für die meisten \ac{soc}'s festgesetzt, da auf der echten Hardware
+Die CPU ist für die meisten \acp{soc} festgesetzt, da auf der echten Hardware
 ebenfalls standardmäßig nur eine CPU zur Anwendung kommt.
 Die CPU Architektur des STM32F429 Mikrocontrollers, \textit{Cortex-M4F} kann
 vollständig in QEMU emuliert werden.
 Beide der folgenden Ansätze sollen die CPU Emulation nutzen und um bestimmte
 Peripherien erweitern.
 
-\subsection{QEMU Device Implementierung}
+% TODO: EXTI benutzen?
+\subsection{QEMU Device Implementierung} \label{konzept-qemu-dev}
 
 Zunächst soll untersucht werden, wie eine Maschine und der dazugehörige SoC
 direkt in QEMU integriert werden kann.
 Das QEMU Projekt ist bereits über 20 Jahre alt und verfügt über diverse
-\acs{api}'s.
+\acp{api}.
 Diese sollen genutzt werden um das Projekt durch den STM32F429-\ac{soc} zu
 erweitern.
 Desweiteren soll eine Maschine integriert werden welche den \ac{soc}
@@ -79,6 +82,7 @@ Der grobe Ablauf dieser Erweiterung besteht also aus folgenden Abschnitten:
 \begin{enumerate}
     \item Hinzufügen neuer Build-System Konfiguration für \ac{soc},
     \item Implementierung des STM32F429-\ac{soc},
+    % TODO: Spezifiziere welche Peripherie
     \item Integration bestehender Peripherie in \ac{soc},
     \item Hinzufügen neuer Build-System Konfiguration für GPIO-Peripherie
     \item Implementierung der neuen Peripherie und Integration in \ac{soc}
@@ -95,6 +99,7 @@ ebenfalls beschrieben.
 \end{figure}
 
 
+% TODO: Kompilieren von EDI Repo mit libnanomsg
 \subsection{External Device Interface Implementierung}
 
 Im zweiten Ansatz soll ein weiteres Konzept für die Integration neuer
@@ -130,6 +135,9 @@ spezifischen Adresse im Adressraum des \ac{soc} verbunden werden.
 % TODO: Wieso kein StmCube und/oder Keil MDK ARM
 % TODO: Wieso meson, wie funktioniert meson mit cross compile
 % TODO: Wie sind Testaufbauten geplant? -> Richtige Testaufbauten dann in Implementaiton
+% TODO: Projektaufbau
+% TODO: Vergleichende tests qemu und hardware
+% TODO: Bei gpio test Programm -> Falls timer nicht abstrahiert einfach loop zählen lassen
 \section{Testprogramme und Teststrategie}
 
 Um die korrekte Funktionsweise der Peripherie und \ac{soc} Implementierungen zu

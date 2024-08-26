@@ -10,7 +10,7 @@
 
 \section{Emulation und Virtualisierung}
 
-Um die Funktionsweise und Anwendung von QEMU zu verstehen muss zuerst die
+Um die Funktionsweise und Anwendung von QEMU zu verstehen müssen zuerst die
 Begriffe der \textit{Virtualisierung} und \textit{Emulation} erklärt werden.
 \newline
 Virtualisierung ist eine Herangehensweise der Informationstechnik, welche
@@ -24,6 +24,7 @@ Software-Ressourcen wie Prozessen oder Betriebssystemen, sowie die
 Virtualisierung von \textit{Hardware}, also die Verwaltung von
 Hardware-Ressourcen, wie Recheneinheiten und
 Speicher\cite{MasterkursVirtParaSys_Virt}.
+% TODO: Hier auch noch etwas zur Emulation hinschreiben
 
 \subsection{Virtualisierungstechniken}
 
@@ -89,6 +90,7 @@ Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
         Es wird kein Hypervisor benötigt.
         Diese Technik findet vorrangig bei Großrechnern und Servern Anwendung.
         \clearpage
+        % TODO: referenzieren im Text
         \begin{figure}[!htb]
             \centering
             \includegraphics[width=0.5\textwidth]{anlagen/bilder/Partitionierung}
@@ -162,6 +164,7 @@ Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
 % Put bit of space between text and image
 \vspace{1ex}
 
+% TODO: Im Text referenzieren
 \begin{figure}[h]
     \begin{subfigure}{0.5\textwidth}
         \includegraphics[width=0.9\linewidth]{anlagen/bilder/volle_Virtualisierung}
@@ -225,8 +228,12 @@ ausführbare Betriebssystem-Images erstellt und bearbeitet werden können.
 % TODO: QOM und Device realization -> QEMU subsystem information
 % TODO: Wie wird Board erstellt, in welcher beziehung stehen Board und GPIO controller
 % TODO: Resettable Interface -> Verweis auf Mikrocontroller Reset?
-%
+
+% TODO-Anmerkung: Code morphing, Verbindung von VMM und Maschinenbefehl-Emulation
+% Qemu als Grundlage von KVM
+
 \subsection{Alternativen}
+% TODO: Warum QEMU und nicht Renode / Virtual ARM -> Ausgereiftheit und non proprietär
 
 Das QEMU Projekt besteht bereits seit einiger Zeit, daher kann eine hohe
 Ausgereiftheit der Anwendung angenommen werden.
@@ -263,7 +270,7 @@ vernetzt\cite{DefGuideCM34_JYiu}.
 Der Mikroprozessor nimmt hierbei meist nur einen geringen Platz der Chipfläche
 ein.
 Bei komplexen Hardware-Designs spricht man auch von einem \ac{soc}.
-\newline % TODO: Quelle!
+\newline % TODO: Quelle! -> Nicht ganz korrekt -> SoC kein Überbegriff
 Im Bereich der eingebetteten Systeme sind ARM Mikroprozessoren weit verbreitet.
 ARM selbst produziert keine Mikrocontroller.
 Sie entwickeln die Mikroprozessoren und verkaufen die Lizenzen zur Produktion
@@ -310,7 +317,7 @@ Die ARM Mikroprozessor-Familien werden in 3 verschiedene Familien unterteilt.
 % Aufbau eines Peripherie Moduls, welche Register, wie Addresierbar, MMIO ??
 \subsection{UART Protokoll}
 
-\ac{uart}, sowie die Erweiterung \ac{usart} bezeichnen elektronische
+\ac{uart}, sowie die Erweiterung \ac{usart}, bezeichnen elektronische
 Schaltungen für Sender und Empfänger asynchroner, sowie synchroner
 Datenübertragung\cite{Digitec_WGehrke_MWinzker}.
 U(S)ART-Schnittstellen werden zum Senden und Empfangen serieller Daten benutzt.
@@ -324,6 +331,9 @@ Systeme weiterhin weit verbreitet\cite{Digitec_WGehrke_MWinzker}.
 % Was ist Baudrate, wozu kann UART in Mikrocontrollern genutzt werden?
 
 \subsection{GPIO}
+\label{sec:theo-basics-gpio}
+% TODO: Wie viele GPIOs (Ports) im Soc??
+% TODO: MMIO
 
 Ein \ac{gpio}-Pin ist ein elektronischer Kontakt, welcher durch Software als
 Eingabe- oder Ausgabe-Kontakt konfiguriert werden
@@ -371,7 +381,7 @@ Ein Echtzeitbetriebssystem ermöglicht eine konkurrente Ausführung mehrere
 Aufgaben bei gleichzeitiger Einhaltung fester Zeitbedingungen.
 Maßgebend für ein Echtzeitbetriebssystem ist dabei nicht die Schnelligkeit
 einer Reaktion auf ein Ereignis, sondern die Einhaltung einer fest definierten
-Zeitschranke (englisch: \textit{Deadline})\cite{BSKompakt_GrundlagenBs}.
+Zeitschranke\footnotemark[1]\cite{BSKompakt_GrundlagenBs}.
 \newline
 Mit steigender Rechenleistung und Verfügbarkeit von Speicher im Umfeld der
 eingebetteten Systeme steigen auch die Anforderungen an die parallele,
@@ -384,8 +394,12 @@ Die vergleichsweise einfache Anpassbarkeit des Linux Kernels und die hohe
 Verfügbarkeit an kompatiblen Hardware-Plattformen ermöglichen eine Vielzahl an
 Einsatzmöglichkeiten\cite{UbuntuBlogEmbeddedLinux}.
 
+% Deadline Footnote
+\footnotetext[1]{englisch: \textit{Deadline}}
+
 \subsection{Interprozesskommunikation}
 
 Bei \ac{ipc} handelt es sich um eine Form der Informationsübertragung zischen
 unterschiedlichen Prozessen eines Betriebssystems.
-%TODO: IPC erklären für Code Dive Integration
+% TODO: IPC erklären für Code Dive Integration
+% TODO: Nanomsg und bekannte alternativen

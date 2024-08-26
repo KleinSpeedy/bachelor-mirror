@@ -8,50 +8,231 @@
 
 \chapter{Implementation}
 
-\iffalse
-Auch wenn der Name des Chapters eher auf eine Art Tagebucheintrag hindeutet, ist der Anteil der Ergebnisdarstellung hier keineswegs zu unterschlagen und unabdingbar.
-
-Unter \enquote{Ergebnisse} sollte eine klare Aussage über die Entdeckungen des Autors gemacht werden, ohne jedoch auf experimentelle Details oder die große Bedeutung der Ergebnisse einzugehen. 
-Außerdem müssen die experimentellen Details in diesem Abschnitt auf das beschränkt werden, was für den Leser zum Verständnis der Ergebnisse notwendig ist.
-
-In diesem Kapitel unterscheiden sich maßgeblich zwei Arten von Abschlussarbeiten. In einer Informatik-lastigen Arbeit folgt auf eine Konzeption eine prototypische Implementation,
-welche zudem getestet werden muss. Diese Test müssen zum einen ebenfalls \enquote{konzipiert} und begründet werden, sowie in ihren Ergebnissen dargestellt werden.
-
-Eine zweite Art Abschlussarbeit, versteht unter \enquote{Implementation} die eigentliche Durchführung eines Experiments. Die eigentliche Handlungsabfolge (\enquote{1. Stäbchen rein}, etc.) ist dabei 
-uninteressant. Daher wird hier gleich auf die Ergebnisse wert gelegt. Hier werden also keine implementationsspezifischen Details dargelegt, sondern gleich die Ergebnisse.
-
-Was beide Ansätz eint, ist eine Interpretation und Kontextualisierung der Ergebnisse. Was sind die Ergebnisse und was \enquote{lesen} Sie daraus ab?
-Gern können Sie hier aufgtretene Problem diskutieren, jedoch \textbf{nicht} welchen Wert oder welche Relevanz Ihre Ergebnisse haben.\\
-
-Ein guter Ergebnisteil erfordert Literaturzitate (vielleicht auch gar keine) und die Bekanntgabe des Ergebnisses sollte von einer Interpretation und Diskussion begleitet werden. 
-
-\underline{Aber \textbf{mindestens} folgende Punkte}\\
-Inhalt des vierten Kapitels (im Allgemeinen):
-\begin{itemize}
-    \item Setzen Sie nun den Plan aus dem dritten Kapitel wenigstens prototypisch um
-    \item Ziel ist es Ihre Überlegungen und Darlegungen zu beweisen
-    \item Diskutieren von Problemen
-    \item Zusätzlich zu der Umsetzung bedarf es (von Ihnen zu definierender) Tests, um die Funktionalität zu beweisen
-    \begin{itemize}
-        \item Laufzeittests, Lasttests, etc.
-        \item Produzieren Sie Ergebnisse um zu zeigen, dass Ihr Ansatz funktioniert und besser/schlechter ist
-        \item \glqq schlechter\grqq{} sein, bedeutet nicht, dass Ihre Arbeit schlecht ist! Am Ende zählt Ihr Ansatz und die Idee
-    \end{itemize}
-\end{itemize}
-\fi
-
-\section{Implementationsdetails}
-Was wurde implementiert, wofür hat es nicht gereicht?
-Warum hat es nicht gereicht?
-Ablauf/Schritte zur Implementation (Erweiterung, IPC, Testprogramme)?
-
-\subsection{QEMU Erweiterungen}
-Wie sind Erweiterungen integriert wurden, was waren Probleme?
+% Wie sind Erweiterungen integriert wurden, was waren Probleme?
 % TODO: Reset values bei gpio müssen ins Device gepassed werden -> Aufwendig da komplexe Instanziierung der Objekte
-Seperate Repos, Aufstartverhalten?
-Debugging QEMU, Debugging in QEMU?
-Probleme mit IPC Kommunikation.
+% Seperate Repos, Aufstartverhalten?
+% Debugging QEMU, Debugging in QEMU?
+\section{QEMU Device Erweiterung}
 
-\subsection{Testverhalten}
-Was sagen Testergebnisse aus?
-Schwierigkeiten bei Generierung von Tests.
+Wie in \ref{konzept-qemu-dev} beschrieben werden Peripherie und Mikrocontroller
+in QEMU durch verschiedene \acp{api} integriert.
+QEMU implementiert mit Hilfe der \ac{qom}- und \ac{qdev}-\acp{api} einen
+Objektorientierten Ansatz.
+Da C keine Objektorientierte Programmiersprache ist und nur ein vergleichsweise
+minimales Typsystem unterstützt werden in QEMU viele dieser Konzepte mittels
+Makro-Programmierung\footnotemark[1] realisiert.
+\newline
+Jede Maschine und jede Peripherie in QEMU ist ein Objekt einer Klasse.
+Moderne Klassen in QEMU erben von der \texttt{TYPE\_DEVICE} Klasse.
+Die Details der Instanziierung einer Klasse werden in
+\ref{sec:qemu-device-build-obj} erläutert.
+Nach Aufstart von QEMU wird als erstes die Maschine erzeugt.
+Welche Maschine gestartet werden soll wird durch den Kommandozeilenbefehl
+\texttt{-machine/-M} ausgewählt.
+Die Maschine erstellt \ac{cpu} und \ac{soc}, welcher anschließend für die
+Realisierung der Peripherie zuständig ist.
+So ensteht eine Baum-Hierarchie, welche in QEMU auch \enquote{QOM-tree} genannt
+wird.
+Im QOM-tree sind alle Objekte einer Maschine repräsentiert.
+\newline
+Im ersten Schritt werden die Quelldateien dem Build-System hinzugefügt.
+Für eine bessere Abgrenzung wird die neue Maschine
+\texttt{stm32f429-thesis-device} erstellt, welche das \enquote{Testboard} in
+QEMU darstellen soll.
+
+\subsection{Build-Konfiguration und Objekt Erstellung}
+\label{sec:qemu-device-build-obj}
+
+Um eine neue ARM Maschine zu registrieren muss die Konfiguration der
+\textbf{Kconfig}\footnotemark[2] Datei im ARM Verzeichnis angepasst werden.
+QEMU erstellt für die Emulation jeder unterstützten Architektur ein
+individuelles Binary, beispielsweise \texttt{qemu-system-arm} oder
+\texttt{qemu-system-x86}.
+Mittels Kconfig und Meson wird sichergestellt das Quelldateien nur für die
+vorgesehenen Architekturen in das jeweilige Programm gelinkt werden.
+Ein Kconfig-Eintrag besteht aus dem Namen der Definition und einer Anzahl an
+Modulen die eingebunden werden sollen.
+
+% Makro-Programmierung Footnote
+\footnotetext[1]{In C werden Textmakros vor der Kompilierung vom
+Präprozessor ersetzt.}
+% Kconfig Erklärung Footnote
+\footnotetext[2]{Kconfig entstandt ursprünglich im Linux-Kernel Projekt und
+wird in QEMU zur Verwaltung der Abhänigkeiten verwendet\cite{QemuDocsKconfig}.}
+
+\begin{minipage}{\linewidth}
+\lstinputlisting[language=,numbers=none,
+                label={lst:qemu-kconfig},
+                linerange={157-162,467-478},
+                caption=ARM Kconfig Konfiguration von Maschine und \ac{soc}]
+                {anlagen/qemu-device/KConfig.config}
+\end{minipage}
+
+Für die Einbindung des Mikrocontrollers werden in \ref{lst:qemu-kconfig} die
+Konfigurationen für den \ac{soc} und die Maschine hinzugefügt.
+Die Maschine benötigt das \ac{tcg} und ARM Modul.
+Mit \texttt{select} wird der STM32F429-\ac{soc} der Maschine hinzugefügt und
+beim Build-System registriert.
+In der Konfiguration des \ac{soc} wird anschließend ausgewählt, welche
+Peripherie und welcher Mikroprozessor verwendet werden soll.
+Im Falle des STM32F429 ist ein ARM Cortex-M4 Mikroprozessor verbaut, welcher
+auf der ARM-V7M Architektur basiert.
+Als Vorlage für die Maschine wurde das bereits in QEMU implementierte
+\textbf{olimex-stm32-h405} Entwicklungsboard verwendet\cite{QemuOlimexBoard}.
+Die Grundlage für den STM32F429-\ac{soc} bildet der vom Olimex-Board verwendete
+STM32F405-\ac{soc}\cite{QemuStmF405Soc}.
+\newline
+In \ref{lst:qemu-soc-header} wird der State für den STM32F429-\ac{soc} als
+\texttt{struct} deklariert.
+Hier erfolgt auch die Deklaration des STM32F429-\ac{soc} Typs.
+Er implementiert die unterschiedlichen Peripherie-Devices, Speicherregionen,
+sowie System- und Referenz Takt.
+Für STM32F4 und STM32F2 Mikrocontroller exisitieren bereits unterschiedliche
+Peripherien.
+In der QEMU Dokumentation wird beschrieben, dass die Produktfamilien STM32F4
+und STM32F2 Pin kompatibel sind.
+Es können also auch Peripherie Implementationen für Mikrocontroller der
+STM32F2-Familie verwendet werden.
+Die Peripherie wird später während der \ac{soc}-Realisierung als \enquote{QEMU
+Device} erstellt und dem QOM-tree hinzugefügt.
+\newline
+\begin{table}[h!]
+    \begin{center}
+    \caption{Speichertypen mit Größe und Adresse im 32bit-Adressraum}
+    \label{tab:stm32-memory}
+    \begin{tabular}{||c|c|c||}
+        \hline
+        \textbf{Speichertyp} & \textbf{Speichergröße in KB} & \textbf{Startadresse} \\
+        \hline
+        \hline
+        \hspace{0.1cm}
+        Flash & 2048 & 0x0800 0000 \\
+        \hline
+        \hspace{0.1cm}
+        \ac{sram} & 256 & 0x2000 0000 \\
+        \hline
+        \hspace{0.1cm}
+        \ac{ccm} & 64 & 0x1000 0000 \\
+        \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+Tabelle \ref{tab:stm32-memory} zeigt die verschiedenen Speichertypen des
+STM32F429-\ac{soc}.
+Die Daten sind im STM32-\ac{trm} Sektion 3.4 für Flash-Speicher und Sektion
+2.3.1 für \ac{sram} und \ac{ccm} definiert\cite{Stm32F4Trm}.
+Die Speicherregionen werden ebenfalls während der Initialisierung des \ac{soc}
+realisiert.
+
+Um die Maschine in der Kommandozeilenanwendung auszuwählen muss diese
+allerdings erst noch als statischer Typ registriert werden.
+Die Registrierung einer Maschine unterscheidet sich leicht von der eines
+Devices.
+In \ref{lst:qemu-machine-init} erfolgt die Registrierung der neuen Maschine.
+Das Makro \texttt{DEFINE\_MACHINE} registriert die Maschine als statischen Typ.
+Anders als bei einem Device ist die Basisklasse einer Maschine
+\texttt{MACHINE\_TYPE}.
+Die Methode \texttt{stm32\_f429\_thesis\_machine\_init} ist verantwortlich für
+die \enquote{oberflächliche} Initialisierung der Maschine.
+Falls vorhanden können hier Argumente verarbeitet werden, die bei Aufstart von
+QEMU über die Kommandozeile Argumente übergeben wurden.
+Des weiteren enthält sie die Beschreibung der Maschine, sowie die konkrete
+Initialisierung durch die \texttt{stm32\_f429\_thesis\_init} Methode.
+In der konkreten Initialisierung werden Mikroprozessor und \ac{soc} erstellt.
+Da alle STM32F429 Mikrocontroller den Cortex-M4 Mikroprozessor wird nur dieser
+erlaubt.
+Sowohl für Maschinen als auch normale Devices exisitieren eine Methode zur
+Initialisierung der Klasse, und eine Methode zur Initialisierung des Objekts.
+Eine \texttt{class\_init} Methode wird immer vor Aufruf der Objekt
+Initialisierung ausgeführt.
+
+\begin{minipage}{\linewidth}
+\lstinputlisting[language=c,numbers=none,
+                label={lst:qemu-machine-init},
+                linerange={36-51},
+                caption=Initialisierung und Registrierung der STM32F429-thesis Maschine]
+                {anlagen/qemu-device/stm32f429_thesis.c}
+\end{minipage}
+% TODO: qemu Aufruf hier als Code Block darstellen
+
+\subsection{GPIO-Peripherie des STM32F429}
+% TODO: MemoryOps hier zeigen
+% TODO: GPIO A - K Erstellung in stm32f429_soc.c hier zeigen
+
+Wie in \ref{sec:concept-periphery-selection} erwähnt soll das GPIO-Module
+implementiert werden.
+Die Konfiguration des Build-Systems erfolgt analog zur Implementation der
+Maschine und des \ac{soc}.
+Es müssen die Kconfig und Meson Konfiguration im GPIO-Peripherie Verzeichnis
+angepasst werden.
+Jeder GPIO Port wird als ein eigenständiges Device modelliert.
+In \ref{lst:qemu-gpio-header} wird der State für das GPIO Device erneut als
+\texttt{struct} deklariert.
+Alle Register sind 32-bit breit und können als vorzeichenlose 32-bit Ganzzahlen
+dargestellt werden.
+% TODO: Props und Migration
+\newline
+Aufgrund hoher Komplexität und fehlender Peripherie des STM32F429 in QEMU
+können nicht alle Funktionalitäten des GPIO Moduls abgebildet werden.
+Die \enquote{alternative Funktion}\footnotemark[3] und die Regulierung der
+Eingabe-/Ausgabe-Frequenz eines GPIO Pins werden nicht unterstützt.
+Es fehlen beispielsweise Unterstützung für Ethernet- und \ac{can}, sowie die
+Implementation der \ac{rcc}-Peripherie.
+% Alternate Function Footnote
+\footnotetext[3]{english: alternate function}
+% TODO: Klärung was heißt system bus
+In \ref{lst:qemu-gpio-memops} wird die Speicherregion während der
+Initialisierung des Objekts initialisiert und dem System-Bus bekannt gemacht.
+In QEMU können jeder Speicherregion bestimmte Eigenschaften zugewiesen werden.
+Dies erfolgt über ein Objekt des Typs \texttt{MemoryRegionOps}.
+In diesem Objekt können verschiedene Eigenschaften bestimmt werden.
+Lese- und Schreibzugriff auf die \ac{mmio}-Region (bzw. die Register) werden
+über die Funktionen \texttt{stm32f429\_gpio\_read} und
+\texttt{stm32f429\_gpio\_write} realisiert.
+Diese werden als \enquote{Callbacks} registriert.
+Es wird ebenfalls die Byte-Reihenfolge, sowie die erlaubte Größe eines Lese-
+oder Schreibzugriffs festgelegt.
+
+\begin{minipage}{\linewidth}
+\lstinputlisting[language=c,numbers=none,
+                label={lst:qemu-gpio-memops},
+                linerange={377-392,410-418},
+                caption=Konfiguration der \ac{mmio}-Speicherregion des GPIO-Devices]
+                {anlagen/qemu-device/stm32f429_gpio.c}
+\end{minipage}
+
+Um die Komplexität der \enquote{write}-Funktion zu verringern wird nur
+ein 4 Byte (32-bit) Zugriff erlaubt.
+Damit werden umständliche und fehleranfällige Bit-Manipulationen unnötig.
+Jedes Register des GPIO-Moduls hat einen individuellen Offset.
+Dieser Offset kann in Sektion 8.4 im \ac{trm} für jedes Register nachgelesen
+werden\cite{Stm32F4Trm}.
+Sowohl der write- als auch der read-Funktion wird ein Offset Wert als Parameter
+übergeben.
+Der finale Offset errechnet sich nach der simplen Formel
+\ref{eq:qemu-gpio-mmio-offset}.
+In den Funktionen kann dann mittels einer \texttt{switch-case} Anweisung des
+\ac{mmio}-Offset der Zugriff auf das jeweilige Register bestimmt werden.
+Bei einem Schreibzugriff wird der Funktion darüber hinaus noch ein Schreibwert
+übergeben, der in das Register geschrieben wird.
+\begin{equation}
+    Offset_{\ac{mmio}} = Basisadresse_{\ac{mmio}} + Offset_{Parameter}
+    \label{eq:qemu-gpio-mmio-offset}
+\end{equation}
+Anschließend wird, sofern notwendig, zusätzliche Funktionalität ausgeführt.
+Im Falle eines Lesezugriffs wird ebenfalls, sofern notwendig, zusätzliche
+Funktionalität ausgeführt.
+Anschließend wird  der aktuelle Wert des Registers zurückgegeben.
+Die zusätzliche Funktionalität begrenzt sich im Rahmen des STM32F429
+GPIO-Moduls auf das LOCK-Register, sowie die Konfigurations-Register.
+
+\section{QEMU External Device Interface}
+% TODO: Probleme mit IPC Kommunikation.
+% TODO: qemu Aufruf hier als Code Block darstellen
+
+\section{Testprogramme}
+% TODO: Was sagen Testergebnisse aus?
+% TODO: Schwierigkeiten bei Generierung von Tests.
+
+\subsection{Hardware- und Emulationstests}
