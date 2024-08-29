@@ -11,6 +11,7 @@
 #include "hw/gpio/stm32f429_gpio.h"
 #include "hw/arm/armv7m.h"
 #include "qom/object.h"
+#include "qemu/units.h"
 
 #define TYPE_STM32F429_SOC "stm32f429-soc"
 OBJECT_DECLARE_SIMPLE_TYPE(STM32F429State, STM32F429_SOC)
@@ -22,11 +23,11 @@ OBJECT_DECLARE_SIMPLE_TYPE(STM32F429State, STM32F429_SOC)
 #define STM_NUM_GPIO 11
 
 #define FLASH_BASE_ADDRESS 0x08000000
-#define FLASH_SIZE (2048 * 1024)
+#define FLASH_SIZE (2 * MiB)
 #define SRAM_BASE_ADDRESS 0x20000000
-#define SRAM_SIZE (256 * 1024)
+#define SRAM_SIZE (192 * KiB)
 #define CCM_BASE_ADDRESS 0x10000000
-#define CCM_SIZE (64 * 1024)
+#define CCM_SIZE (64 * KiB)
 
 struct STM32F429State {
     SysBusDevice parent_obj;

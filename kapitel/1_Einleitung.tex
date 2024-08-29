@@ -20,7 +20,6 @@ Die große Vielfalt an Anwendungsbereichen führt zu vielen verschiedenen,
 individuell zusammengestellten elektronischen Baugruppen, welche auf einer
 großen Auswahl verschiedener Mikroprozessor Plattformen und Architekturen
 basieren.\newline
-% TODO: system-on-chip (SoC) mit integrieren
 Darüber hinaus gibt es selbst für einzelne Architekturen wie beispielsweise
 \textit{ARM} oder \textit{RISC-V} von Hersteller zu Hersteller verschiedene
 Mikrocontroller Varianten.
@@ -29,12 +28,9 @@ und \acs{ram} Speicher und der Ausstattung mit verschiedenen
 Peripherie Baugruppen, wie Ethernet oder \acs{can}.\newline
 Software für eingebettete Systeme muss also individuell auf unterschiedliche
 Zielplattformen angepasst werden.
-% TODO: STM32 Modell auf MCU hier bereits einbringen oder erst in
-% Problemstellung? Möglichst als Beispiel für eine Zielplattform einarbeiten
 
 \section{Problemstellung}
 
-% TODO: 32 vs 64 bit Speicheraddressierung einbringen?
 Mikrocontroller eignen sich nicht zur Entwicklung von Software.
 Sie besitzen deutlich weniger Speicher und Rechenleistung als beispielsweise
 Workstations oder Laptops.
@@ -50,10 +46,10 @@ Um die Firmware zu erstellen ist die Nutzung plattformunabhängiger
 Dies verlangsamt den Entwicklungsprozess, da Firmware, zum Beispiel für Tests,
 immer erst auf den Mikrocontroller \textit{geflasht} werden muss.
 Das Flashen geschieht im Entwicklungsprozess meist unter Zuhilfenahme
-von extra Hardware, welche genutzt wird um die Firmware auf den Mikrocontroller
+von extra Hardware, welche genutzt wird, um die Firmware auf den Mikrocontroller
 zu schreiben.\newline
 Auch der direkte Zugriff auf das System ist nicht immer gewährleistet.
-Zahlen des statistischen Bundesamtes zeigen, dass im IT-Dienstleistungsbereich
+Zahlen des Statistischen Bundesamtes zeigen, dass im IT-Dienstleistungsbereich
 im Jahr 2021 gut drei Viertel der Beschäftigten im Home-Office
 arbeiteten\cite{DestatisHomeOffice}.
 Der Mangel an Mikrocontrollern und anderen elektronischen Bauteilen kann
@@ -64,18 +60,18 @@ können, welche bei Compilern für die Entwicklungsplattform möglicherweise nic
 auftreten\cite{DebGccBug}\cite{LaunchpadGccBug} oder in neueren Versionen schon
 behoben wurden.
 Diese Fehler zu identifizieren ist schwierig und sie nachzustellen zudem
-sehr zeitaufwendig.\newline
+sehr zeitaufwändig.\newline
 Zur Fehlersuche während der Ausführung des Programms wird meist extra Hardware
 benötigt, welche auf integrierte Schnittstellen, wie zum Beispiel
 \acs{jtag}, zugreift.
 Das laufende Programm kann anschließend pausiert werden, um den Zustand an
 spezifischen Zeitpunkten zu inspizieren.
 Sind diese Schnittstellen oder die extra Hardware nicht vorhanden wird die
-Fehlersuche deutlich aufwendiger und schwieriger, bei manchen Anwendungen sogar
+Fehlersuche deutlich aufwändiger und schwieriger, bei manchen Anwendungen sogar
 unmöglich.
-% TODO: Statische Code analyse kurz erläutern
 Zur Vorbeugung dieser Probleme gibt es zwar Werkzeuge wie statische
-Code-Analyse, diese können aber nicht alle Fehler finden oder beheben.
+Code-Analyse.
+Diese können aber nicht alle Fehler finden oder beheben.
 Um die Korrektheit der Implementation zu überprüfen, \textit{muss} die
 Anwendung also zum Test unter Bedingungen, welche denen auf der Zielplattform
 sehr nahe kommen ausgeführt werden.\newline
@@ -87,7 +83,6 @@ Die Notwendigkeit für extra Hardware zum flashen und \textit{debuggen} der
 Software wird reduziert.
 Das erhöht die Entwicklungsgeschwindigkeit und macht Entwickler Hardware- und
 ortsunabhängiger.
-% TODO: Verweis Web-Engineering Vorlesung - Docker etc -> ähnliches Prinzip
 
 \section{Zielstellung}
 
@@ -113,7 +108,7 @@ vollständig emuliert werden.\newline
 Es soll daher für fehlende Peripherie eine prototypische Implementierung
 entwickelt werden.
 Die Implementierung aller fehlenden Peripheriebaugruppen ist sehr zeitaufwändig
-und im im Rahmen dieser Arbeit nicht möglich.
+und im Rahmen dieser Arbeit nicht möglich.
 Im ersten Schritt soll dafür geeignete Peripherie ausgewählt werden.
 Falls möglich sollen heterogene Peripheriebaugruppen identifiziert und
 zusammengefasst werden.
@@ -137,33 +132,5 @@ Mikrocontroller Modelle.
 Beide Ansätze sollen abschließend nach Komplexität und Erweiterbarkeit der
 Implementierung, sowie mittels exemplarischer Beispiel-Anwendungen getestet und
 bewertet werden.
-% TODO: Anwendungen auflisten? Bezug zu implementierter Peripherie herstellen
-% Bereits implementierte Peripher auch nutzen und bewerten
 
 \newpage
-
-% TODO: Unterschied Methodik zu Theoretische Grundlagen + Konzeption
-\iffalse
-\section{Methodik}
-
-Im Methodik-Abschnitt (eine eigene Section) einer Arbeit stellen Sie die Methoden dar,
-die Sie verwendet haben oder vorhaben zu verwenden, um die Fragestellung zu beantworten. 
-In diesem Abschnitt erläutern Sie, welche Methoden umgesetzt wurden (oder auch angedacht),
-um die Hypothesen zu testen und die Fallstudie durchzuführen. 
-Welche Methoden für Ihre Arbeit geeignet sind, ist auch ein wesentlicher Punkt Ihres
-angestrebten Titels und somit ein zu bewertender Teil dieser Arbeit. 
-
-\underline{Aber \textbf{mindestens} folgende Punkte}\\
-Inhalt des ersten Kapitels (im Allgemeinen):
-\begin{itemize}
-    \item Thematische Einführung, umreißen des Themas \dots wo befinden wir uns?
-    \item Herausstellen des Problems und warum es eines ist was gelöst werden sollte.
-    \item Herausstellen der tatsächlichen Ziel-/Fragestellung, welche bearbeitet werden wird.
-    \item Eine Abgrenzung was diese Arbeit ist und was sie nicht ist.
-    \item Stand der Forschung \dots Was existiert bereits? Wie gut passt das auf das Problem?
-    \begin{itemize}
-        \item Referenzen mittels cite: \cite[S.~111]{jsch2011} \cite[S.~27f]{Tane2014}
-    \end{itemize}
-    \item Eine abgeleitete Methodik $\rightarrow$ basierend auf der Literatur und Ihrem Wissen: wie haben Sie nun vor Ihr Problem zu lösen? Vllt durch \cite{9429985}?
-\end{itemize}
-\fi

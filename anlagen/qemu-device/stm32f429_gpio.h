@@ -57,8 +57,9 @@ struct STM32F429GpioState
     uint32_t ospeedr_reset_val;
     uint32_t pupdr_reset_val;
 
-    /* current state in locking sequence */
-    Stm32F429GpioLockSequence lock_state;
+    /* current state in locking sequence as uint8 in order to save state
+     * during Migration */
+    uint8_t lock_state;
 
     qemu_irq pin_irqs[STM32F429_GPIO_NUM_PINS];
 };

@@ -27,8 +27,8 @@ seriellen Schnittstellen einfacher zu testen.
 Es können Funktionen wie ARM's \textit{Semihosting} verwendet werden, um
 beispielsweise durch UART übertragene Zeichen in der Kommandozeile auszugeben.
 Dies verringert die Komplexität der Testprogramme, da keine speziellen
-Änderungen für die jeweilige Testumgebung (QEMU oder echte Hardware) erfordlich
-sind.
+Änderungen für die jeweilige Testumgebung (QEMU oder echte Hardware)
+erforderlich sind.
 \newline
 Die GPIO Schnittstelle wurde für eine neue, eigenständige Implementierung in
 QEMU ausgewählt.
@@ -44,9 +44,7 @@ Funktionalitäten.
 Die Implementierung kann daher nur als Orientierung dienen und muss
 entsprechend angepasst werden.
 
-% TODO: Entwicklungsumgebung
-% TODO: Unterschied Simulation und Emulation
-\section{QEMU Erweiterung}
+\section{QEMU Erweiterungen}
 
 QEMU unterscheidet bei der Emulation von ARM Systemen zwischen Maschinen und
 \ac{cpu}'s.
@@ -67,14 +65,13 @@ vollständig in QEMU emuliert werden.
 Beide der folgenden Ansätze sollen die CPU Emulation nutzen und um bestimmte
 Peripherien erweitern.
 
-% TODO: EXTI benutzen?
 \subsection{QEMU Device Implementierung} \label{konzept-qemu-dev}
 
 Zunächst soll untersucht werden, wie eine Maschine und der dazugehörige SoC
 direkt in QEMU integriert werden kann.
 Das QEMU Projekt ist bereits über 20 Jahre alt und verfügt über diverse
 \acp{api}.
-Diese sollen genutzt werden um das Projekt durch den STM32F429-\ac{soc} zu
+Diese sollen genutzt werden, um das Projekt durch den STM32F429-\ac{soc} zu
 erweitern.
 Desweiteren soll eine Maschine integriert werden welche den \ac{soc}
 implementiert.
@@ -82,8 +79,8 @@ Der grobe Ablauf dieser Erweiterung besteht also aus folgenden Abschnitten:
 \begin{enumerate}
     \item Hinzufügen neuer Build-System Konfiguration für \ac{soc},
     \item Implementierung des STM32F429-\ac{soc},
-    % TODO: Spezifiziere welche Peripherie
-    \item Integration bestehender Peripherie in \ac{soc},
+    \item Integration bestehender Peripherie (\ac{uart}, SysCfg, etc.) in
+        \ac{soc},
     \item Hinzufügen neuer Build-System Konfiguration für GPIO-Peripherie
     \item Implementierung der neuen Peripherie und Integration in \ac{soc}
 \end{enumerate}
@@ -91,6 +88,8 @@ Die Adressen der Peripherie müssen dem Technischen-Referenzwerk des
 STM32F429-Mikrocontrollers entnommen werden.
 Die Funktionsweise und Konfiguration der Peripherie-Register sind dort
 ebenfalls beschrieben.
+Wie in Abbildung \ref{fig:QemuDeviceErweiterung} zu sehen ist, erstellt die
+Maschine den \ac{soc}, welcher wiederum die konfigurierte Peripherie erstellt.
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.7\textwidth]{anlagen/bilder/Qemu_Device}
@@ -99,7 +98,6 @@ ebenfalls beschrieben.
 \end{figure}
 
 
-% TODO: Kompilieren von EDI Repo mit libnanomsg
 \subsection{External Device Interface Implementierung}
 
 Im zweiten Ansatz soll ein weiteres Konzept für die Integration neuer
@@ -109,8 +107,14 @@ verlagert.
 Die Unterscheidung zwischen CPU und Maschine besteht zwar auch bei diesem
 Ansatz, allerdings ist der Funktionsumfang der Maschine stark reduziert, da sie
 keine Peripherie direkt über den \ac{soc} integriert.
+Die Maschine agiert hier nur als generischer Container, welcher Verbindungen
+entgegennimmt.
+Im Gegensatz zum ersten Ansatz muss nicht für jeden neuen Mikrocontroller eine
+separate Maschine mitsamt \ac{cpu} implementiert werden.
 Die relevanten Schnittstellen laufen jeweils gekapselt in einem separaten
-Prozess und kommunizieren mittels \ac{ipc} mit der QEMU-Anwendung.
+Prozess.
+Wie in Abbildung \ref{fig:QemuExternalDeviceErweiterung} zu sehen ist,
+kommunizieren der \ac{soc} und Peripherie mittels \ac{ipc}.
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.7\textwidth]{anlagen/bilder/Qemu_external_device}
@@ -118,46 +122,61 @@ Prozess und kommunizieren mittels \ac{ipc} mit der QEMU-Anwendung.
     \label{fig:QemuExternalDeviceErweiterung}
 \end{figure}
 Dies ermöglicht eine unabhängige Implementierung von Peripherie und \ac{soc}.
-Die Interprozesskommunikation wird mittels einer externen Bibliothek
-realisiert, welche in die QEMU Anwendung integriert werden muss.
-Im Gegensatz zum ersten Ansatz muss nicht für jeden neuen Mikrocontroller eine
-separate Maschine mitsamt \ac{cpu} implementiert werden.
-Stattdessen reicht eine generische Maschine welche den jeweiligen \ac{cpu}-Typ
-integriert.
-Um die Komplexität gering zu halten soll nur die im STM32F429-\ac{soc}
-verwendete \ac{cpu} benutzt werden.
+Die Interprozesskommunikation wird mittels der externen Bibliothek
+\textit{nanomsg} realisiert, welche in den QEMU Event-Loop integriert
+wurde\cite{NanoMsg}.
 Die Verbindung von QEMU-Emulation und den separaten Prozessen erfolgt bei Start
 der QEMU-Anwendung.
 Dort können einzelne Devices oder eine Gruppe von Devices mit einer
 spezifischen Adresse im Adressraum des \ac{soc} verbunden werden.
+Die Konfiguration des \ac{soc} erfolgt ebenfalls bei Start der QEMU Anwendung.
+Die Integration der Erweiterung existiert bereits in einem separaten
+Repository\cite{QemuEdiRepo}.
+Dieses soll genutzt werden, um die QEMU Anwendung zu bauen.
+\newline
+Im Gegensatz zum ersten Ansatz kann eine Testanwendung die das \ac{edi}
+implementiert nicht unverändert sowohl in QEMU als auch auf realer Hardware
+laufen.
+Hierfür wird eine weitere Abstraktionsschicht benötigt, welche die Aufrufe an
+die Peripherie abfängt und entsprechend der Umgebung behandelt.
+Im Rahmen des Vortrags wurde eine Demo-Applikation vorgestellt, welche das
+\textit{CMake} Build-System nutzt, um die Anwendungen für QEMU und Hardware zu
+implementieren\cite{EdiDemoRepo}.
+Um die Komplexität möglichst gering zu halten soll versucht werden, die
+Demo-Applikation auf den STM32F429-\ac{soc} anzuwenden.
+Das Testprogramm für die reale Hardware greift auf die externe, quelloffene
+Bibliothek \textit{libopencm3}\cite{LibOpenCm3} zurück.
+Da sowohl die Projektstruktur, als auch die Bibliothek nicht Teil der normalen
+Testanwendungen sind, soll der Fokus auf der Interakton zwischen Anwendung 
+und QEMU liegen.
 
-% TODO: Was sind Voraussetzungen für Programm?? -> zusätzlich zu Startup auch Tick und anderes
-% TODO: Wieso kein StmCube und/oder Keil MDK ARM
-% TODO: Wieso meson, wie funktioniert meson mit cross compile
-% TODO: Wie sind Testaufbauten geplant? -> Richtige Testaufbauten dann in Implementaiton
-% TODO: Projektaufbau
-% TODO: Vergleichende tests qemu und hardware
-% TODO: Bei gpio test Programm -> Falls timer nicht abstrahiert einfach loop zählen lassen
 \section{Testprogramme und Teststrategie}
+\label{sec:concept-tests}
 
 Um die korrekte Funktionsweise der Peripherie und \ac{soc} Implementierungen zu
-testen sollen verschiedene Testprogramme entwickelt werden.
+testen, sollen verschiedene Testprogramme entwickelt werden.
 Diese Testprogramme werden anschließend sowohl in QEMU als auch auf realer
 Hardware ausgeführt.
-Da bei allen Ansätzen der gleiche \ac{soc} mit gleicher \ac{cpu} eingesetzt
-wird reicht es die Tests auf die jeweilige Peripherie zu beschränken.
+Mögliche Unterschiede bei beiden Varianten sollen wärend der Ausführung
+identifiziert werden.
+Dabei wird sich auf den STM32F429-\ac{soc} mit der Cortex-M4 \ac{cpu}
+beschränkt.
 Während der Ausführung können unterschiedliche Verhalten in der Software für
 emulierte und reale Umgebung auftreten.
-Um diese möglichst gering zu halten sollen die Testprogramme eine möglichst
-geringe Komplexität aufweisen.
+Um diese gering zu halten, sollen die Testprogramme einfach gehalten werden.
 \newline
 Für die Entwicklung der Tests sollen ausschließlich die notwendigsten externen
 Bibliotheken genutzt und konfiguriert werden.
 Dies umfasst die STM-\textit{\ac{hal}}, für Programmierung und Konfiguration
 der Peripherie.
-Zur Konfiguration der der \ac{cpu} spezifischen
-Einstellungen soll das \textit{\ac{cmsis}} verwendet werden.
-Die eigentliche Testanwendung wird dann in \textit{C} programmiert.
+Eine einheitliche Nutzung von Bibliotheken verringert ebenfalls den
+Implementationsaufwand.
+Zur Konfiguration der \ac{cpu} spezifischen Einstellungen soll das
+\textit{\ac{cmsis}} verwendet werden.
+Die eigentliche Testanwendung wird in \textit{C} programmiert.
 Für die Testprojekte wird das Build-System \textit{Meson} verwendet, da dies
 auch im QEMU Projekt zum Einsatz kommt und somit keine erneute Umgewöhnung
 erfordert.
+Sofern möglich soll auf quelloffene Anwendungen zurückgegriffen werden.
+Die Entwicklungsumgebung sollte einfach gehalten werden, um leicht
+reproduzierbar zu sein.

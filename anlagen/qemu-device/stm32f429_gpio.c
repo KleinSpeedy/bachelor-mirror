@@ -18,21 +18,22 @@ static const char * const type_desc = "STM32F420 Gpio module";
 #define UPPER_WORD_MASK 0xFFFF0000ul
 #define LOWER_WORD_MASK 0x0000FFFFul
 
-typedef enum GpioPinMode {
-    PINMODE_UNDEFINED = 0,
-    PINMODE_IN_FLOAT,       /* Input floating */
-    PINMODE_IN_PD,          /* Input pull down */
-    PINMODE_IN_PU,          /* Input pull up*/
-    PINMODE_OUT_OD_FLOAT,   /* output open-drain floating */
-    PINMODE_OUT_OD_PD,      /* output open-drain pull down */
-    PINMODE_OUT_OD_PU,      /* output open-drain pull up */
-    PINMODE_OUT_PP_FLOAT,   /* output push-pull floating */
-    PINMODE_OUT_PP_PD,      /* output push-pull pull down */
-    PINMODE_OUT_PP_PU       /* output push-pull pull up */
-} GpioPinMode;
+// Offsets of GPIO Module registers
+typedef enum StmGpioRegOffset {
+    OFFSET_MODER = 0x00,
+    OFFSET_OTYPER = 0x04,
+    OFFSET_OSPEEDR = 0x08,
+    OFFSET_PUPDR = 0x0C,
+    OFFSET_IDR = 0x10,
+    OFFSET_ODR = 0x14,
+    OFFSET_BSRR = 0x18,
+    OFFSET_LCKR = 0x1C,
+    OFFSET_AFRL = 0x20,
+    OFFSET_AFRH = 0x24
+} StmGpioRegOffset;
 
 /*
- * 32bit registers contain 16 pins represented by two bits each
+ * 32 bit registers contain 16 pins represented by two bits each
  */
 static inline uint8_t get_pin_val_32(const uint32_t *r, uint8_t pin)
 {
@@ -44,53 +45,16 @@ static inline uint8_t get_pin_val_16(const uint32_t *r, uint8_t pin)
     return (*r) & (1 << pin);
 }
 
-static inline GpioPinMode get_pin_mode(STM32F429GpioState *s, uint8_t pin)
+/*
+ * Only write control register if they're not freezed by LCKR
+ */
+static inline void write_control_register(STM32F429GpioState *s, uint32_t *reg,
+                                            uint32_t value)
 {
-    assert(pin < STM32F429_GPIO_NUM_PINS);
-
-    const uint8_t moder_pin = get_pin_val_32(&s->moder, pin);
-    const uint8_t pupdr_pin = get_pin_val_32(&s->pupdr, pin);
-    const uint8_t otyper_pin = get_pin_val_16(&s->otyper, pin);
-
-    // extracting pin mode as described in table 35 trm
-    if(moder_pin == 0)
+    if(!(s->lock_state == LS_LOCKED))
     {
-        if(pupdr_pin > 0)
-        {
-            return (pupdr_pin == 1) ? PINMODE_IN_PU : PINMODE_IN_PD;
-        }
-        else
-        {
-            return PINMODE_IN_FLOAT;
-        }
+        *reg = value;
     }
-    else if(moder_pin == 1)
-    {
-        if(otyper_pin == 0)
-        {
-            if(pupdr_pin > 0)
-            {
-                return (pupdr_pin == 1) ? PINMODE_OUT_PP_PU : PINMODE_OUT_PP_PD;
-            }
-            else
-            {
-                return PINMODE_OUT_PP_FLOAT;
-            }
-        }
-        else
-        {
-            if(pupdr_pin > 0)
-            {
-                return (pupdr_pin == 1) ? PINMODE_OUT_OD_PU : PINMODE_OUT_OD_PD;
-            }
-            else
-            {
-                return PINMODE_OUT_OD_FLOAT;
-            }
-        }
-    }
-    // alternate function and analog mode are not supported
-    return PINMODE_UNDEFINED;
 }
 
 // container for easier access to LCK register
@@ -108,32 +72,6 @@ static inline uint32_t extract_u32_from_lockregister(struct LockRegister lr)
     return (uint32_t)(0x00000000 | ((lr.lckk << 16) | lr.lckconf));
 }
 
-/*
- * Only write control register if they're not freezed by LCKR
- */
-static inline void write_control_register(STM32F429GpioState *s, uint32_t *reg,
-                                            uint32_t value)
-{
-    if(!(s->lock_state == LS_LOCKED))
-    {
-        *reg = value;
-    }
-}
-
-// Offsets of GPIO Module registers
-typedef enum StmGpioRegOffset {
-    OFFSET_MODER = 0x00,
-    OFFSET_OTYPER = 0x04,
-    OFFSET_OSPEEDR = 0x08,
-    OFFSET_PUPDR = 0x0C,
-    OFFSET_IDR = 0x10,
-    OFFSET_ODR = 0x14,
-    OFFSET_BSRR = 0x18,
-    OFFSET_LCKR = 0x1C,
-    OFFSET_AFRL = 0x20,
-    OFFSET_AFRH = 0x24
-} StmGpioRegOffset;
-
 /* The lock sequence is described in TRM 8.4.8 as follows:
  * 1. write LCKR[16] = 1 + LCKR[0..15]
  * 2. write LCKR[16] = 0 + LCKR[0..15]
@@ -145,27 +83,36 @@ typedef enum StmGpioRegOffset {
 static void update_lckr(STM32F429GpioState *s, uint32_t value,
                                  bool is_read)
 {
-    if(!is_read)
+    trace_stm32f429_gpio_update_lckr(is_read, value, s->lock_state);
+
+    // once locked, we always return unless system is reset
+    if(s->lock_state == LS_LOCKED)
     {
-        if((s->lock_state != LS_WRITE_ONE) && !(s->lock_state == LS_READ) &&
-        ((s->lckr & LOWER_WORD_MASK) != (value & LOWER_WORD_MASK)))
-        {
-            // abort configuration
-            s->lock_state = LS_WRITE_ONE;
-            return;
-        }
+        return;
     }
 
     const struct LockRegister temp_lckr = {
-        .lckk = (value & 1 << 16),
+        .lckk = (value & (1 << 16)) ? 1 : 0,
         .lckconf = (value & LOWER_WORD_MASK),
     };
+
+    if((s->lckr & LOWER_WORD_MASK) != temp_lckr.lckconf)
+    {
+        if(s->lock_state != LS_WRITE_ONE)
+        {
+            // abort lock sequence
+            s->lock_state = LS_WRITE_ONE;
+            qemu_log_mask(LOG_GUEST_ERROR, "%s: lock configuration changed\n",
+                          __func__);
+            return;
+        }
+    }
 
     switch(s->lock_state)
     {
         case LS_WRITE_ONE:
         {
-            if(temp_lckr.lckk != 1 || is_read)
+            if((temp_lckr.lckk != 1) || is_read)
             {
                 break;
             }
@@ -176,7 +123,7 @@ static void update_lckr(STM32F429GpioState *s, uint32_t value,
         }
         case LS_WRITE_TWO:
         {
-            if(temp_lckr.lckk != 0 || is_read)
+            if((temp_lckr.lckk) != 0 || is_read)
             {
                 s->lock_state = LS_WRITE_ONE;
                 break;
@@ -188,7 +135,7 @@ static void update_lckr(STM32F429GpioState *s, uint32_t value,
         }
         case LS_WRITE_THREE:
         {
-            if(temp_lckr.lckk != 1 || is_read)
+            if((temp_lckr.lckk) != 1 || is_read)
             {
                 s->lock_state = LS_WRITE_ONE;
                 break;
@@ -213,7 +160,7 @@ static void update_lckr(STM32F429GpioState *s, uint32_t value,
         {
             /* lock state can only be changed by reset after locking sequence
              * is completed */
-            break;
+            return;
         }
     }
 }
@@ -221,15 +168,13 @@ static void update_lckr(STM32F429GpioState *s, uint32_t value,
 /* Read from the memory region. @addr is relative to @mr; @size is in bytes */
 static uint64_t stm32f429_gpio_read(void *opaque, hwaddr offset, unsigned size)
 {
-    (void) size;
-
-    trace_stm32f429_gpio_read(offset);
-
-    if(offset <= STM32F429_GPIO_MMIO_SIZE)
+    if(offset >= STM32F429_GPIO_MMIO_SIZE)
     {
         qemu_log_mask(LOG_GUEST_ERROR, "%s: offset out of bounds\n", __func__);
         return 0;
     }
+
+    trace_stm32f429_gpio_read(offset);
 
     STM32F429GpioState *s = opaque;
 
@@ -291,16 +236,13 @@ static uint64_t stm32f429_gpio_read(void *opaque, hwaddr offset, unsigned size)
 static void stm32f429_gpio_write(void *opaque, hwaddr offset, uint64_t data,
                                  unsigned size)
 {
-    // unused, we require access as 32 bit (word)
-    (void) size;
-
-    trace_stm32f429_gpio_write(offset, data);
-
-    if(offset <= STM32F429_GPIO_MMIO_SIZE)
+    if(offset >= STM32F429_GPIO_MMIO_SIZE)
     {
         qemu_log_mask(LOG_GUEST_ERROR, "%s: offset out of bounds\n", __func__);
         return;
     }
+
+    trace_stm32f429_gpio_write(offset, data);
 
     STM32F429GpioState *s = opaque;
     const uint32_t value_32 = (uint32_t)data;
@@ -406,6 +348,8 @@ static void stm32f429_gpio_reset(Object *obj)
     s->lckr = DEFAULT_RESET_VALUE;
     s->afhr = DEFAULT_RESET_VALUE;
     s->aflr = DEFAULT_RESET_VALUE;
+    // reset lock state
+    s->lock_state = LS_WRITE_ONE;
 }
 
 static void stm32f429_gpio_init(Object *obj)
@@ -432,12 +376,13 @@ static const VMStateDescription vmstate_stm32f429_gpio = {
         VMSTATE_UINT32(lckr, STM32F429GpioState),
         VMSTATE_UINT32(afhr, STM32F429GpioState),
         VMSTATE_UINT32(aflr, STM32F429GpioState),
+        VMSTATE_UINT8(lock_state, STM32F429GpioState),
         VMSTATE_END_OF_LIST()
     }
 };
 
 // Device properties holding specific reset values
-static Property properties_stm32f42_gpio[] = {
+static Property properties_stm32f429_gpio[] = {
     DEFINE_PROP_UINT32("moder_reset_val", STM32F429GpioState,
             moder_reset_val, DEFAULT_RESET_VALUE),
     DEFINE_PROP_UINT32("ospeedr_reset_val", STM32F429GpioState,
@@ -452,7 +397,7 @@ static void stm32f429_gpio_class_init(struct ObjectClass *klass, void *data)
     DeviceClass *dc = DEVICE_CLASS(klass);
     ResettableClass *rc = RESETTABLE_CLASS(klass);
 
-    device_class_set_props(dc, properties_stm32f42_gpio);
+    device_class_set_props(dc, properties_stm32f429_gpio);
     dc->desc = type_desc;
     dc->vmsd = &vmstate_stm32f429_gpio;
     rc->phases.hold = &stm32f429_gpio_reset;

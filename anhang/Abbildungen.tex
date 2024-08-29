@@ -5,3 +5,53 @@
 %##########################################################
 \clearpage
 \chapter{Anhang -\ Abbildungen}
+\begin{figure}[H]
+    \noindent\fbox{\begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
+        \dirtree{%
+            .1 /.
+            .2 meson.build.
+            .2 stm32f429\_cross\_file.txt.
+            .2 ext/.
+            .3 STM32CubeF4/.
+            .2 inc/.
+            .3 stm32f4xx\_hal\_conf.h.
+            .3 system\_handlers.h.
+            .2 startup/.
+            .3 stm32f429.S.
+            .3 system\_handlers.c.
+            .3 system\_stm32f4xx.c.
+            .2 linker/.
+            .3 stm32f429.ld.
+            .2 src/.
+            .3 main.c.
+        }
+    \end{minipage}}
+    \caption{Minimale Verzeichnisstruktur für ein Testprogramm}
+    \label{fig:project-dirtree}
+\end{figure}
+
+\begin{figure}[H]
+    \noindent\fbox{\begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
+        \dirtree{%
+            .1 /.
+            .2 CMakeLists.txt.
+            .2 app/.
+            .3 hw\_runner/.
+            .3 qemu\_runner/.
+            .3 include/.
+            .3 src/.
+            .3 CMakeLists.txt.
+            .2 libs/.
+            .3 qemu\_startup/.
+            .3 edi/.
+            .3 opencm3/.
+            .3 CMakeLists.txt.
+            .2 periphery/.
+            .3 listener.py.
+            .2 cmake/.
+            .3 toolchain.cmake.
+        }
+    \end{minipage}}
+    \caption{Grobe Verzeichnisstruktur des EDI Testprogramms\cite{EdiTestsRepo}}
+    \label{fig:edi-demo-dirtree}
+\end{figure}

@@ -7,56 +7,137 @@
 \clearpage
 \chapter{Auswertung und Ausblick}
 
-\iffalse
-Dieser Abschnitt stellt den Schlusspunkt der Arbeit dar. In diesem Abschnitt (und im Diskussionteil) erwartet der Leser, 
-dass er Antworten auf die in der Einleitung formulierten Fragestellungen findet und sich vergewissert, 
-dass diese wirksam verteidigt wurden und mit der von Ihnen formulierten \enquote{These} übereinstimmen.
+Die Emulation eines 32-Bit Mikrocontrollers durch das Programm QEMU bietet
+viele Möglichkeiten, den aufwändigen Prozess der Embedded Software Entwicklung
+zu vereinfachen.
+Die Ausführung einer Embedded Software Anwendung im Kontext einer emulierten
+Architekturplattform kommt einer echten Hardwareumgebung bereits sehr nahe.
+Allerdings ist der Implementationsaufwand hoch.
+Bereits wenig komplexe Mikrocontroller-Peripherien benötigen ein umfangreiches
+Verständnis des gesamten Systems.
 
-Die Hauptziele der Diskussion bestehen darin, eine Analyse Ihrer gesammelten Ergebnisse zu präsentieren, 
-Ihre Ergebnisse angemessen darzustellen und eine Einschätzung der Bedeutsamkeit Ihrer Arbeit zu geben. Beachten Sie hier,
-den Unterschied zur Diskussion im vorherigen Kapitel. Diskutieren Sie hier vor allem den Wert und die Bedeutung Ihrer Ergebnisse, auf Basis der 
-Interpretationen aus dem vorherigen Kapitel. Beziehen Sie sich gern auch auf Ihr beschriebenes Problem und Ihr Ziel.
-
-Jede wichtige Schlussfolgerung, die Sie im \enquote{Ergebnisteil} gezogen haben, 
-muss hier erneut behandelt werden. Eine gewisse Anzahl von Wiederholungen ist unvermeidlich. Darüberhinaus, 
-die Ergebnisse anderer Forschungsarbeiten, müssen mit eindeutigen Verweisen auf auffindbare Literaturquellen versehen sein.
-
-Der Fazit-Teil kann als eine kurze Zusammenfassung Ihrer Diskussion betrachtet werden. 
-Der Leser muss sich hier schnell einen Überblick über den Inhalt und die Bedeutung der Arbeit als Ganzes verschaffen.
-
-Dieser Abschnitt soll einen Überblick präsentieren und dient dazu, dem Hauptteil Ihrer Arbeit den letzten Schliff zu geben. 
-Die Schlussfolgerung kann auch Hinweise auf ein mögliches zukünftiges Werk enthalten.
-
-\underline{Aber \textbf{mindestens} folgende Punkte}\\
-Inhalt des fünften Kapitels (im Allgemeinen):
-\begin{itemize}
-    \item Reflektieren Sie hier nun die Ergebnisse der Tests aus dem letzten Kapitel
-    \item Ordnen Sie diese in den Gesamtkontext ein... gut/schlecht? Was kann man verbessern/anders machen? Schätzen Sie auch ab was Veränderungen bringen könnten.
-    \item Was wurde durch die Ergebnisse gezeigt? Geben Sie eine bewertende (selbstkritische) Aussage ab zu Ihrem Schaffen
-    \item Geben Sie einen Ausblick was nun folgen sollte/könnte.
-\end{itemize}
-\fi
-
-\section{Auswerung der Testergebnisse}
-Wie aussagekräftig sind Tests?
-Vergleich "normales" QEMU und IPC.
-Macht es Sinn kompletten Mikrocontroller abzubilden?
-Wie gut könnte (und konnte) Software darauf laufen?
+\section{Auswertung}
 
 \subsection{Emulationsergebnisse}
-Wie viel Software lief überhaupt?
 
-\subsection{Verhalten in emulierter Umgebung}
-Wie gut war emulierte Umgebung im Vergleich zu echter Hardware?
-Was waren Unterschiede?
-Probleme? -> mC Verhalten
+Die Erweiterung von QEMU durch den STM32F429-\ac{soc} und die \ac{gpio}
+Peripherie ermöglicht bereits jetzt eine zuverlässige Emulation des Systems.
+Im Vergleich mit der QEMU-\ac{edi} Erweiterung war die Device-Erweiterung
+komplexer, aber auch weniger fehleranfällig.
+Sie ermöglicht die fast volle Emulation STM32F429-\ac{soc}.
+Je vollständger die Implementation der Mikrocontroller-Peripherie, desto besser
+kann der Test auf realer Hardware ersetzt werden.
+Wie in Kapitel \ref{sec:impl-tests-emulation} gesehen werden konnte, ist eine
+Ausführung einfacher Testanwendungen fast ohne Einschränkungen möglich.
+Hier ist das Alter des QEMU-Projekts ein weiterer Vorteil.
+Es existieren bereits viele Implementationen, die direkt für einen
+Mikrocontroller genutzt werden können.
+Sollte eine direkte Nutzung einer Peripherie nicht möglich sein, kann sie meist
+dennoch als Vorlage für eine neue Implementation verwendet werden.
+Häufig ähneln sich die Konzepte der Schnittstellen.
 
-\section{Problemdiskusion}
-Schätzung der Komplexität.
-Rechtfertigt Implementationsaufwand Ergebnisse?
-Einbindung in realen Entwicklungsalltag.
+Das QEMU-\ac{edi} Projekt ist ebenso in der Lage, einfache Peripherie schnell
+zu emulieren.
+Der Ansatz der \ac{ipc}-Kommunikation ist gut dafür geeignet, kurzfristige,
+schnelle Testimplementationen von Mikrocontrollern und der dazugehörigen
+Peripherien zu entwickeln.
+Eine unvollständige Peripherie-Abdeckung ist bei diesem Ansatz kein großes
+Problem, da es einfach ist, ein neues Skript für eine neue Peripherie zu
+schreiben.
+Die Austauschbarkeit emulierter und hardwarebasierter Testanwendungen erhöht die
+Entwicklungsgeschwindigkeit.
+Die Nutzung der gleichen Schnittstellen kann beim Design von
+Softwarearchitektur helfen, da die Testanwendung sowohl in der Emulation als
+auch auf der echten Hardware die gleiche \enquote{logische Struktur} haben.
+Es besteht ein hoher Freiheitsgrad für Implementationen.
+Er wird lediglich beschränkt durch das Konzept der \ac{ipc}-Kommunikation.
+Diese ist aber bereits in viele moderne Programmiersprachen gut integriert.
 
-% TODO: Unit tests mittels auto run in pipeline bspw?
-% TODO: Memory region accepts function implementieren für LCKR Access
+\subsection{Problemdiskusion}
+
+Obwohl die Ergebnisse der QEMU-Device Erweiterung bereits eine gute Abbildung
+der echten Hardware darstellen, so ist der Implementationsaufwand dennoch hoch.
+Die QEMU-\acp{api} und Kommandozeilenargumente stellen mächtige Werkzeuge dar.
+Allerdings können sie auch den Aufwand einer Implementation ungewollt erhöhen.
+Als Beispiel hierfür sind die \textit{Properties}.
+Es war nicht einfach möglich die Werte eines Objekts dynamisch zu verändern,
+wie in Kapitel \ref{sec:impl-qemu-reset} dargestellt wurde.
+Das schränkt den Implementationsfreiraum ein und führt zur Erhöhung der
+Softwarekomplexität.
+Ein weiteres Problem ist die Unvollständigkeit der Peripherie-Implementationen.
+Wie in Kapitel \ref{sec:impl-tests-emulation} zu sehen, hat das Fehlen einer
+wichtigen Mikrocontroller-Komponente berits große Auswirkungen auf die
+Vollständigkeit der Emulation.
+Je \enquote{zentraler} die Funktion der Peripherie, desto eher sollte sie
+implementiert werden.
+Das Alter und die Komplexität der QEMU Softwarearchitektur wirken sich
+ebenfalls restriktiv auf zukünftige Implementationen aus.
+Ein Beispiel hierfür ist die Nutzung der C Programmiersprache.
+Es werden moderne Programmierparadigmen, wie Objektorientierte Programmierung
+oder die Definition und Implementation von Schnittstellen in QEMU angewandt.
+Allerdings sind diese bei weitem nicht so stark ausgeprägt wie in einer
+moderneren Programmiersprache wie C++ oder Rust.
+Die Fehleranfälligkeit von Programmiersprachen ohne starke Typisierung, wie
+beispielsweise C, ist vergleichsweise höher als bei Sprachen mit starker
+Typisierung\cite{GithubProgrammingLanguagesStudy}.
+Eine weitere Hürde bei der QEMU-Device Erweiterung ist die Bereitstellung von
+\enquote{Simluationsdaten}.
+Es ist in QEMU nicht ohne weiteres möglich, Testdaten für eine Peripherie
+bereitzustellen.
+Für einfache Schnittstellen wie \ac{uart} ist dies noch kein großes Problem.
+Je komplexer die Peripherie wird, desto höher sind die Anforderungen an eine
+vollständige Emulation.
+Es bedingt beispielsweise die Implementation komplexer
+\textit{Device-Backends}, welche den Gesamtaufwand der Emulation deutlich
+erhöhen.
+
+Auch die Nutzung moderner Programmierparadigmen ist keine Garantie für eine
+Verringerung der Komplexität.
+Ein Beispiel hierfür ist die im \ac{edi} Demo-Projekt eingeführte
+Abstraktionsebene für die Austauschbarkeit der darunter liegenden
+Implementation.
+Diese wird ermöglicht durch die Definition von Schnittstellen und damit der Austauschbarkeit einer Implementation.
+% und damit austauschbarkeit der Implemntation
+Es erhöht aber auch die Komplexität der Gesamtanwendung.
+Sie verfehlt darüber hinaus das verfehlt aber das Ziel der
+vollständigen Abstraktion der echten Hardware durch eine emulierte Umgebung.
+Das Ziel einer Emulation sollte es sein, Software ohne jegliche Anpassung
+ausführen zu können, egal ob in einer emulierten Umgebung oder auf echter
+Hardware.
+Die Abstraktion der darunter liegenden Implementation ermöglicht zwar schnelles
+\enquote{Prototyping}, allerdings wird die Software dadurch schwerer
+verständlich.
+Die Komplexität von \ac{ipc}-Kommunikation kann ebenfalls eine Einstiegshürde
+sein.
+Sowhol die Warbarkeit, als auch Erweiterbarkeit von Software wird dadurch im
+schlimmsten Fall ebenfalls vermindert.
+Wichtig ist hierbei eine klare Definition der verwendeten Schnittstellen und die
+Nutzung ausgereifter, möglichst fehlerfreier Software.
+Im Falle der QEMU-\ac{edi} Erweiterung wird dies komplizierter, da das Projekt
+auf den Stand der Version 4.2.0 festgesetzt ist.
+Das Projekt muss ohne Bugfixes und neue Features auskommen.
+Ein Update auf eine neuere Version wäre sehr aufwändig.
+
 \section{Ausblick}
-Ausblick auf mehr Peripherie?
+
+Die Implementation einer \ac{gpio} Peripherie ist nur ein erster Schritt für
+die vollständige Emulation eines Mikrocontroller.
+\newline
+Im nächsten Schritt sollte zuerst zentrale, wichtige Peripherie implementiert
+werden.
+Ein Beispiel hierfür ist \ac{rcc} oder des Interrupt Watchdog, beziehungsweise
+Window Watchdog.
+Darüber hinaus sollten die bestehenden Peripherien vervollständigt werden.
+Ein Beispiel hierfür die \enquote{alternative Funktion} der
+\ac{gpio}-Peripherie.
+Sind diese Peripherie Geräte implementiert, sollten die  Ethernet und \ac{can}
+Schnittstellen folgen.
+Beide sind von zentraler Beudetung im Kontext moderener Embedded Software.
+\newline
+Abseits davon wäre die Bereitstellung von Testdaten eine wichtige Erweiterung.
+Eine grafische Darstellung eines Entwicklungsboards in Verbindung mit der
+Emulation durch QEMU könnte helfen, das Zusammenspiel zwischen Mikrocontroller
+udes nd Peripherie besser zu veranschaulichen.
+Darüber hinaus ist die einfache Integration in automatische Testgenerierung,
+beziehungsweise Integrationtesting ein breites Feld, was von den breiten
+Möglichkeiten der Emulation stark profitieren würde.

@@ -6,11 +6,33 @@
 \clearpage
 \chapter{Anhang -\ Quelltexte}
 
+\begin{minipage}{\linewidth}
+\lstinputlisting[language=c,numbers=none,
+                label={lst:qemu-gpio-memops},
+                linerange={384-399,419-427},
+                caption=Konfiguration der \ac{mmio}-Speicherregion des GPIO-Devices]
+                {anlagen/qemu-device/stm32f429_gpio.c}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+\lstinputlisting[language=c,numbers=none,
+                label={lst:qemu-gpio-vmstates},
+                linerange={364-382},
+                caption=Definition der \texttt{VMStates} zum Laden/Speichern der Zustände eines Objekts]
+                {anlagen/qemu-device/stm32f429_gpio.c}
+\end{minipage}
+
 \lstinputlisting[caption=STM32F429 SoC Header Datei,
                 language=c,
                 label={lst:qemu-soc-header}]
                 {anlagen/qemu-device/stm32f429_soc.h}
+
 \lstinputlisting[caption=STM32F429 GPIO Device Header Datei,
                 language=c,
                 label={lst:qemu-gpio-header}]
+                {anlagen/qemu-device/stm32f429_gpio.h}
+
+\lstinputlisting[caption=Skript zur Ausführung von QEMU mit Firmware,
+                language=sh,
+                label={lst:qemu-test-script}]
                 {anlagen/qemu-device/stm32f429_gpio.h}

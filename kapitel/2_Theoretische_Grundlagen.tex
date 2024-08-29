@@ -24,7 +24,6 @@ Software-Ressourcen wie Prozessen oder Betriebssystemen, sowie die
 Virtualisierung von \textit{Hardware}, also die Verwaltung von
 Hardware-Ressourcen, wie Recheneinheiten und
 Speicher\cite{MasterkursVirtParaSys_Virt}.
-% TODO: Hier auch noch etwas zur Emulation hinschreiben
 
 \subsection{Virtualisierungstechniken}
 
@@ -56,10 +55,8 @@ Im Benutzermodus laufen alle übrigen Prozesse.
 Prozesse dieser Stufe verfügen über geringere Privilegien und können nur über
 \textit{Betriebssystemaufrufe} auf Funktionalitäten des Betriebssystemkernels
 zugreifen\cite{BSKompakt_Syscall}.
-% TODO: Was sind Syscalls?
 Eine selbständige Erhöhung, bzw. Senkung, der Privilegienstufe ist nicht
 möglich, was zur Sicherheit und Stabilität des gesamten Systems beiträgt.
-
 
 Einige Virtualisierungstechniken nutzen einen \textit{Hypervisor}, manchmal
 auch \ac{vmm} genannt.
@@ -78,19 +75,19 @@ als Anwendung in einem Host-Betriebssystem parallel zu anderen Prozessen im
 weniger privilegierten Benutzermodus\cite{BSKompakt_Virt}.
 Die Hardware-Ressourcen werden standardmäßig vom Host-Betriebssystem verwaltet
 und der VM zur Verfügung gestellt.
-Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
+Beispiele für Typ-2-Hypervisor sind Oracle VirtualBox und QEMU.
 
 \begin{description}
     \item[Partitionierung]
         Das Konzept der \textit{Partitionierung} beschreibt die Aufteilung der
         Gesamtressourcen eines Systems auf verschiedene
         Teilsysteme\cite{BSKompakt_Virt}.
-        Die Verwaltung findet hierbei direkt durch die Firmware des Systems
-        statt.
+        In Abbildung \ref{fig:Partitionierung} wird dargestellt, wie die
+        Verwaltung der Ressourcen direkt durch die Firmware des Systems
+        erfolgt.
         Es wird kein Hypervisor benötigt.
         Diese Technik findet vorrangig bei Großrechnern und Servern Anwendung.
         \clearpage
-        % TODO: referenzieren im Text
         \begin{figure}[!htb]
             \centering
             \includegraphics[width=0.5\textwidth]{anlagen/bilder/Partitionierung}
@@ -112,14 +109,15 @@ Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
         \textit{Hypercalls} auf den Typ-1-Hypervisor zu, welcher dann die
         eigentlichen Systemaufrufe im Betriebssystem und den Zugriff auf die
         Hardware ausführt\cite{BSKompakt_Virt}.
-    \item[vollständige Virtualisierung]
+    \item[Vollständige Virtualisierung]
         Die \textit{vollständige Virtualisierung} beschreibt eine Technik, bei
         der ein Typ-2-Hypervisor ein gesamtes System inklusive aller Ressourcen
         und Schnittstellen (Netzwerkkarte, Laufwerke, etc.) virtualisiert
         bereitstellt\cite{BSKompakt_Virt}.
         Auf diesem virtuellen System wird ein Gast-Betriebssystem ausgeführt.
-        Der Hypervisor läuft als Anwendung auf dem Host-Betriebssystem
-        parallel zu anderen Prozessen.
+        Die Abbildung \ref{fig:Volle_Virtualisierung} stellt dar, wie der
+        Hypervisor, parallel zu den anderen Prozessen, als Anwendung auf dem
+        Host-Betriebssystem läuft
         Alle privilegierten Systemaufrufe des Gast-Betriebssystems werden vom
         Hypervisor abgefangen und an das Host-Betriebssystem weitergeleitet.
     \item[Anwendungs-/Softwarevirtualisierung]
@@ -164,7 +162,6 @@ Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
 % Put bit of space between text and image
 \vspace{1ex}
 
-% TODO: Im Text referenzieren
 \begin{figure}[h]
     \begin{subfigure}{0.5\textwidth}
         \includegraphics[width=0.9\linewidth]{anlagen/bilder/volle_Virtualisierung}
@@ -181,7 +178,13 @@ Beispiele für Typ-2-Hypervisor sind Oracle Virtualbox und QEMU.
     \caption{Gegenüberstellung (a) vollständiger
     Virtualisierung\cite{VollVirtAbb_BSKompakt} und (b) Software
     Emulation\cite{SoftEmuAbb_BSKompakt}}
+    \label{fig:Comparison_SE_VV}
 \end{figure}
+
+In Abbildung \ref{fig:Comparison_SE_VV} wird verdeutlicht, dass Volle
+Virtualisierung und Software-Emulation den selben Ansatz haben.
+Emulation von Software kann im Vergleich zu vollständiger Virtualisierung auch
+komplett ohne Betriebssystem laufen.
 
 \subsection{Hardware-Emulation}
 
@@ -195,6 +198,9 @@ In dieser virtuellen Umgebung ist es möglich Softare auszuführen, welche
 für eine andere Hardware-Plattform ausgelegt ist\cite{BSKompakt_Virt}.
 Betriebssystemaufrufe und Zugriffe auf Peripherie werden in der
 Emulationsumgebung behandelt.
+In der Regel nimmt die Software die Emulierte Umgebung vollständig in Anspruch.
+Eine vollständige Emulation kann die realen Eigenschaften einer Hardware
+perfekt abbilden.
 
 % =============================================================================
 
@@ -203,7 +209,7 @@ Emulationsumgebung behandelt.
 \textit{QEMU} ist ein generischer, quelloffener Maschinen Emulator und
 Virtualisierer\cite{QemuAbout}.
 Das Projekt wurde 2003 von Fabrice Bellard gestartet und läuft unter den
-meisten Betriebssysteme wie Windows, Linux und MacOS.
+meisten Betriebssystemen wie Windows, Linux und MacOS.
 QEMU emuliert die meisten gängigen Befehlssatzarchitekturen wie x86, ARM,
 RISC-V, MIPS, und einige mehr\cite{WikiQemu}.
 Die Emulationssoftware unterstützt unterschiedliche Modi.
@@ -218,22 +224,25 @@ werden.
 \newline
 QEMU kann sowohl als Kommandozeilenprogramm, als auch mit grafischer Oberfläche
 ausgeführt werden.
-Das QEMU Projekt stellt darüber hinaus verschiedene Kommandozeilen-Werkzeuge
+Das QEMU Projekt stellt darüber hinaus verschiedene Kommandozeilen Werkzeuge
 zur Verfügung, zum Beispiel \texttt{qemu-img}, eine Anwendung mithilfe derer
 ausführbare Betriebssystem-Images erstellt und bearbeitet werden können.
 
-% TODO: Nähere Beschreibung von QEMU
-%\subsection{Funktionsweise}
-%User Mode vs Full System Emulation, Projektstruktur ?, TCG, Device und Board
-% TODO: QOM und Device realization -> QEMU subsystem information
-% TODO: Wie wird Board erstellt, in welcher beziehung stehen Board und GPIO controller
-% TODO: Resettable Interface -> Verweis auf Mikrocontroller Reset?
+Neben QEMU existiert auch noch die \ac{kvm} .
+Bei \ac{kvm} handelt es sich um eine Anwendung für Vollständige
+Virtualisierung, mithilfe derer mehrere Virtuelle Maschinen unter Linux
+gestartet werden können.
+Bei der Emulation einer Ziel-Architektur, die identisch zur Host-Architektur
+ist, kann QEMU in Verbindung mit \ac{kvm} Befehle mittels Beschleunigung extrem
+schnell ausführen.
+Einige Zeit lang betrieb das \ac{kvm} Projekt einen QEMU Fork,
+\textit{qemu-kvm}, der mittlerweile aber Teil des QEMU Basisprojekts ist und
+eingestellt wurde\cite{QemuKvmWiki}.
 
-% TODO-Anmerkung: Code morphing, Verbindung von VMM und Maschinenbefehl-Emulation
-% Qemu als Grundlage von KVM
+Die dynamische Übersetzung von Befehlen der Ziel-Architektur zu Instruktionen
+der Host-Architektur erfolgt durch den \ac{tcg}.
 
 \subsection{Alternativen}
-% TODO: Warum QEMU und nicht Renode / Virtual ARM -> Ausgereiftheit und non proprietär
 
 Das QEMU Projekt besteht bereits seit einiger Zeit, daher kann eine hohe
 Ausgereiftheit der Anwendung angenommen werden.
@@ -241,7 +250,7 @@ Darüber hinaus existieren bereits Implementationen für Mikrocontroller Modelle
 der Produkt Familie STM32F4.
 Es existieren einige Alternativen zu QEMU, davon sollen 2 kurz vorgestellt
 werden.
-Beide Alternativen erfüllen ähnliche Funktionen wie QEMU.
+Beide Alternativen erfüllen ähnliche Funktionen.
 \begin{description}
     \item[Renode]
     \textit{Renode} ist ein quelloffenes Entwicklungs-Framework zur Simulation
@@ -254,6 +263,13 @@ Beide Alternativen erfüllen ähnliche Funktionen wie QEMU.
     Emulations Werkzeug für ARM basierte Systeme, welches in der Cloud
         ausgeführt werden kann\cite{ArmVirtualHwAbout}.
 \end{description}
+
+Aufgrund der hohen Ausgereiftheit des Projekts kann von einer geringen
+Fehleranfälligkeit ausgegangen werden.
+Das \textit{Renode} Projekt ist deutlich jünger und potenziell
+fehleranfälliger.
+\textit{Arm Virtual Hardware} ist nicht frei zugänglich, und fällt damit aus
+der weitern Betrachtung raus.
 
 % =============================================================================
 
@@ -269,22 +285,21 @@ Alle Komponenten sind mittels eines Systembuses miteinander
 vernetzt\cite{DefGuideCM34_JYiu}.
 Der Mikroprozessor nimmt hierbei meist nur einen geringen Platz der Chipfläche
 ein.
-Bei komplexen Hardware-Designs spricht man auch von einem \ac{soc}.
-\newline % TODO: Quelle! -> Nicht ganz korrekt -> SoC kein Überbegriff
+Man spricht von einem \ac{soc}, wenn sämtliche Komponenten in einem Gehäuse
+integriert sind.
+\newline
 Im Bereich der eingebetteten Systeme sind ARM Mikroprozessoren weit verbreitet.
 ARM selbst produziert keine Mikrocontroller.
 Sie entwickeln die Mikroprozessoren und verkaufen die Lizenzen zur Produktion
-an externe Hersteller, welche sie anschließend in ihre Mikrocontroller-Designs
+an externe Hersteller, welche sie anschließend in Ihre Mikrocontroller-Designs
 integrieren.
 \newline
 Die ARM Mikroprozessor-Familien werden in 3 verschiedene Familien unterteilt.
 \textit{Cortex-M}, \textit{Cortex-R} und \textit{Cortex-A} Mikroprozessoren.
 
-% TODO: Welche Familien 32 bzw 64 Bit, Befehlssatzarchitektur, CISC/RISC
-% Multicore ? Multi threaded Applikationen
 \begin{description}
     \item[Cortex-M]
-    Die \textit{Cortex-M} Familie ist eine Familie von 32-bit Mikroprozessoren,
+    Die \textit{Cortex-M} Familie ist eine Familie von 32-Bit Mikroprozessoren,
     welche erstmals 2005 veröffentlicht wurden\cite{DefGuideCM34_JYiu}.
     Die Prozessor-Familie ist für eine besonders breite Fläche an
     Elektronischen-Anwendungen geeignet, von Mobiltelefonen bis hin zur
@@ -308,14 +323,22 @@ Die ARM Mikroprozessor-Familien werden in 3 verschiedene Familien unterteilt.
     Meist läuft auf einem Cortex-A Mikroprozessor ein vollwertiges
     Betriebssystem, mit Unterstützung für virtualisierte Speichertechniken,
     sowie einer Speicherverwaltungseinheit\cite{DefGuideCM34_JYiu}.
-    % TODO: Quelle
     Beispiele hierfür sind moderne Smartphones mit \textbf{Qualcomm Snapdragon}
     oder \textbf{Apple Silicon} Prozessoren.
 \end{description}
 
-% TODO: "Peripherie des STM32F4" besser Titel?
-% Aufbau eines Peripherie Moduls, welche Register, wie Addresierbar, MMIO ??
-\subsection{UART Protokoll}
+\subsection{Peripherie des STM32F429}
+\label{sec:theo-basics-periphery-stm32f4}
+
+Sämtliche Peripherie-Module der STM32 Mikrocontroller werden durch Register
+kontrolliert.
+Mittels der Register kann mit den Modulen kommunziert werden.
+Sie enthalten auch die Konfigurationen und Einstellungen der jeweiligen
+Peripherie.
+Im Falle eines Datenaustauschs über die Register spricht man auch von
+\ac{mmio}.
+Die Register sind Teil des gesamten Adressraums des Mikrocontrollers und haben
+jeweils individuelle Adressen.
 
 \ac{uart}, sowie die Erweiterung \ac{usart}, bezeichnen elektronische
 Schaltungen für Sender und Empfänger asynchroner, sowie synchroner
@@ -327,22 +350,21 @@ Während im Bereich der Heimcomputer durch die Einführung leistungsfähigerer
 Übertragungsmethoden, wie Ethernet oder WLAN, die serielle Datenübertragung an
 Bedeutung verloren hat, ist sie im Bereich der Mikrocontroller und eingebetter
 Systeme weiterhin weit verbreitet\cite{Digitec_WGehrke_MWinzker}.
-% TODO: Grobe Erklärung einer Schaltung, Verbindungsaufbau und Datenpaket
-% Was ist Baudrate, wozu kann UART in Mikrocontrollern genutzt werden?
-
-\subsection{GPIO}
-\label{sec:theo-basics-gpio}
-% TODO: Wie viele GPIOs (Ports) im Soc??
-% TODO: MMIO
+Bei einer \ac{uart} Verbindung gibt es mehrere verschiedene
+Konfigurationsmöglichkeiten.
+Die wichtigste Einstellung ist die \textit{Baudrate}.
+Sie bestimmt wie viele Zeichen pro Zeitspanne übertragen werden können.
+Bei der Baudrate ist die Zeitspanne \textit{Zeichen pro Sekunde}.
+Gängige Baudraten für \ac{uart} sind 9600 oder 115200 Zeichen pro Sekunde.
+Zusätzlich gibt es noch Einstellungen wie das Start-, Stop- und Paritätsbit.
 
 Ein \ac{gpio}-Pin ist ein elektronischer Kontakt, welcher durch Software als
 Eingabe- oder Ausgabe-Kontakt konfiguriert werden
 kann\cite{Digitec_WGehrke_MWinzker}.
 Wie der Name schon sagt haben GPIO-Pins keine feste, vordefinierte Funktion.
-% TODO: Erklärung Register für Peripherie, siehe oben.
-% Erklärung Konfiguration von GPIO Registern
 Die Konfiguration der Pins erfolgt durch das Setzen und Löschen sogenannter
 Kontroll-Register.
+
 
 % =============================================================================
 
@@ -350,15 +372,11 @@ Kontroll-Register.
 
 Um eine Applikation für einen Mikrocontroller zu entwickeln und anschließend
 auf einem realen System zu testen müssen mehrere Schritte durchlaufen werden.
-Im folgenden sollen die Softwaretechnischen Rahmenbedingungen für die
+Im Folgenden sollen die Softwaretechnischen Rahmenbedingungen für die
 Mikrocontroller-Entwicklung kurz vorgestellt und erläutert werden.
 
-% TODO: Was ist CMSIS, wofür wird es gebraucht, wer hat es eingeführt
-% TODO: HAL was ist es, wie eingesetzt?
-% TODO: Middleware
-\subsection{Softwaretechnische Grundlagen}
+\subsection{Systemumgebungen in der Embedded Software}
 
-% TODO: Quelle
 Die de-facto Standard-Programmiersprachen im Umfeld der eingebetteten Systeme
 sind \textit{C} und \textit{C++}.
 Darüber hinaus werden auch \textit{Rust}, \textit{Java} oder
@@ -394,12 +412,41 @@ Die vergleichsweise einfache Anpassbarkeit des Linux Kernels und die hohe
 Verfügbarkeit an kompatiblen Hardware-Plattformen ermöglichen eine Vielzahl an
 Einsatzmöglichkeiten\cite{UbuntuBlogEmbeddedLinux}.
 
+\subsubsection{Hardware- und Softwaretechnische Grundlagen}
+\label{sec:theo-basics-stb}
+
+STM32 Mikrocontroller von \ac{stm} greifen auf die \ac{hal}-Bibliothek und das
+\ac{cmsis} Paket zu.
+Die \ac{hal} Bibliothek wird von \ac{stm} bereitgestellt und gepflegt.
+Jeder Mikrocontroller der STM32F4 Familie besitzt eine \ac{hal} Konfiguration.
+Sie wird dafür eingesetzt, die Details der Hardware vom Anwendungsprogrammierer
+zu verstecken und ihm zur Interaktion Abstraktions-Schichten
+bereitzustellen\cite{Stm32F4HalMan}.
+Des Weiteren sollte sie möglichst Plattformunabhängig sein und möglichst viele
+Mikrocontroller Modelle gleichzeitig unterstützen, um so die
+Entwicklungsgeschwindigkeit zu steigern.
+Das \ac{cmsis} Paket enthält die Konfiguration und Defintionen der ARM
+Mikroprozessoren.
+Häufig stellt ARM den Quellcode für das Aufstartverhalten von sowohl
+Mikroprozessor als auch Mikrocontroller bereit.
+Darüber hinaus liefert ARM die Definitionen für die Peripherie-Module des
+Mikroprozessors, wie \ac{scb} oder Vector Table\cite{ArmCortexM4Dgug}.
+\newline
+Ein Mikrocontroller verfügt meist über flüchtigen und nicht-flüchtigen
+Speicher.
+In der Regel sind dies Flash und \ac{sram} Speicher.
+Die Konfiguration dieser Speichertypen und ihrer Größen, sowie die Aufteilung
+in Sektionen sind Aufgabe der \texttt{Linker}-Datei. 
+Sie definiert den sogenannten \texttt{Entry Point}, also die Stelle an der der
+Mikrocontroller die Ausführung nach einem Reset beginnt.
+Außerdem wird die Anordnung aller Symbole sowie statischer und nicht statische
+Daten festgelegt.
+Das erste Objekt eines STM32 Mikrocontrollers ist nach Arm Cortex-M4 Device
+Generic User Guide der \textit{Vektor Table}.\cite{ArmCortexM4Dgug}
+Darin sind der initale Stack-Zeiger Wert, sowie die Adresse für
+\texttt{Reset\_Handler} und die übrigen \texttt{System\_Handler} dort
+definiert.
+
 % Deadline Footnote
 \footnotetext[1]{englisch: \textit{Deadline}}
 
-\subsection{Interprozesskommunikation}
-
-Bei \ac{ipc} handelt es sich um eine Form der Informationsübertragung zischen
-unterschiedlichen Prozessen eines Betriebssystems.
-% TODO: IPC erklären für Code Dive Integration
-% TODO: Nanomsg und bekannte alternativen

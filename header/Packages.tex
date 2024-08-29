@@ -34,8 +34,13 @@
 %##########################################################
 \usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage{array}
+\usepackage{dirtree}
 
 \providecommand{\keywords}[1]{\textbf{\textit{Keywords:}} #1}
+% New column with better centering
+% New column with better centering
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
 %############ HTWK Farben #################
 \xdefinecolor{htwkGelb}{rgb}{0.996,0.925,0}
@@ -74,6 +79,7 @@
 \usepackage{acro}
 % Used for subfigure command
 \usepackage{subcaption}
+\usepackage{algorithm,algpseudocode}
 
 %##########################################################
 % Code Snippet Definitionen
